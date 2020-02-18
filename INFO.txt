@@ -1,1 +1,22 @@
 ESTRUCTURA
+--->INPUT: Fitxer/fitxers amb parametres input
+--->PROGRAM:Scripts, executable i programa principal
+-----------Main: Llegir input, fer la MD i treure output
+-----------Makefile: Compilar tot i treure executable
+-----------Scripts: Cadascu tindra un .f90 diferent amb les subroutines que ha de fer
+--->OUTPUT:Fitxers de resultats
+--->SCRIPTS: Per plotejar les dades
+--->run.sh: passar fitxers de INPUT a PROGRAM, executar programa i passar resultats
+            de PROGRAM A OUTPUT
+FEINES O BLOCS:
+- Crear fitxers input segons els parametres que es necessitin i fer la subroutine/s
+    per llegir aquests fitxers
+- Adaptar el programa principal a us de moduls i lectura de fitxers...
+    i adaptar evolucio temporal per optimmitzar.
+- Subroutines de MD adaptar-les juntament amb codi principal per optimitzar.
+    A repartir entre varies persones
+- Crear subroutines per escriure fitxers: Magnituds termodinamiques, trajectoria
+     particules .xyz, g(r),...
+- Crear el Makefile per compilar i crear executable
+- Crear run.sh: Copiar fitxers entre carpetes i executar programa. ¿Plotejar les dades?
+- Crear scripts de GNOPlot
