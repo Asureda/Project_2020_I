@@ -20,3 +20,4 @@ FEINES O BLOCS:
 - Crear el Makefile per compilar i crear executable
 - Crear run.sh: Copiar fitxers entre carpetes i executar programa. ¿Plotejar les dades?
 - Crear scripts de GNOPlot
+GitHub
