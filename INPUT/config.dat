@@ -5,3 +5,4 @@ FALSE           # Compute the radial distribution function
 100             # Number of iteratoins to to compute the function
 FALSE           # Compute the time-evolution of the positions
 100             # Number of iteratoins to to compute the position
+END
