@@ -21,3 +21,4 @@ FEINES O BLOCS:
 - Crear run.sh: Copiar fitxers entre carpetes i executar programa. ¿Plotejar les dades?
 - Crear scripts de GNOPlot
 GitHub
+Modificació Elena
