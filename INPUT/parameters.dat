@@ -9,3 +9,4 @@
 TRUE        # to put a thermostat
 100.0       # if true, temperature of the thermostat
 0.1         # precision for the radial distribution function
+END
