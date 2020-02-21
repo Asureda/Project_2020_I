@@ -1,5 +1,4 @@
 !!Creem els mòduls de les subrutines, posicions i velocitats inicials, Andersen i funcions de distribució radial:
-program moduls_elena
 
 module Iniciatitzar
 
@@ -124,5 +123,3 @@ contains
     end subroutine RAD_DIST_FINAL
 
 end module Distribucio_Radial
-
-end program moduls_elena
