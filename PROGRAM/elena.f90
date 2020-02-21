@@ -1,5 +1,4 @@
 !!Creem els mòduls de les subrutines, posicions i velocitats inicials, Andersen i funcions de distribució radial:
-program moduls_elena
 
 module Iniciatitzar
 
@@ -11,7 +10,7 @@ contains
 
     subroutine FCC_Initialize(r)
     INTEGER :: n,i,j,k
-    REAL*8 :: positions(n_particles,3)
+    REAL*8 :: positions(:,:)
     n=1
     !print*,n
     DO i=0,M-1
@@ -31,22 +30,22 @@ contains
     RETURN
     end subroutine FCC_Initialize
 
-    subroutine Uniform_velocity
+    subroutine Uniform_velocity(v)
     INTEGER :: i,j,seed
-    REAL*8 :: velocity(n_particles,3),vi,vtot,T
+    REAL*8 :: v(:,:),vi,vtot,T
     seed=13
     CALL SRAND(seed)
     DO i=1,3
         vtot=0
         DO j=1,n_particles-1
             vi=2*RAND()-1
-            velocity(j,i)=vi
+            v(j,i)=vi
             vtot=vtot+vi
         END DO
-        velocity(n_particles,i)=-vtot
+        v(n_particles,i)=-vtot
     END DO
     !Resacling the velocities to the temperature
-    CALL VELO_RESCALING(velocity,T)
+    CALL VELO_RESCALING(v,T)
     RETURN
     end subroutine Uniform_velocity
 
@@ -60,11 +59,11 @@ IMPLICIT NONE
 
 contains
 
-    subroutine Andersen(v,temp,h,n_particles)
+    subroutine Andersen(v,temp)
     IMPLICIT NONE
     INTEGER i
     REAL*8 temp,nu,n1,n2,n3,n4,n5,n6
-    REAL*8, DIMENSION(n_particles,3) :: v
+    REAL*8, DIMENSION(:,:) :: v
     nu=0.1/h
     sigma=sqrt(temp)
     DO i=1,n_particles
@@ -84,15 +83,16 @@ end module Andersen_modul
 module Distribucio_Radial
 
 use READ_DATA
+use LJ_PBC
 
 IMPLICIT NONE
 
 contains
 
-    subroutine RAD_DIST_INTER(r,vec,dx_radial,n_radial,n_particles,L)
+    subroutine RAD_DIST_INTER(r,vec)
     IMPLICIT NONE
-    INTEGER n_radial,i,coef,j
-    REAL*8 dist,vec(0:n_radial+1), r(n_particles,3),dx,dy,dz,PBC1
+    INTEGER i,coef,j
+    REAL*8 dist,vec(:,:), r(:,:),dx,dy,dz
     DO i=1,n_particles
         DO j=1,n_particles
             IF (i.ne.j) THEN
@@ -110,9 +110,9 @@ contains
     RETURN
     end subroutine RAD_DIST_INTER
 
-    subroutine RAD_DIST_FINAL(vec,dx_radial,n_radial,n_gr_meas,rho)
+    subroutine RAD_DIST_FINAL(vec,n_gr_meas)
     IMPLICIT NONE
-    INTEGER n_radial,i,n_gr_meas
+    INTEGER i,n_gr_meas
     REAL*8 vec(0:n_radial+1),result(0:n_radial+1),aux
     vec=vec/(1d0*n_gr_meas)
     DO i=2,n_radial
@@ -125,4 +125,19 @@ contains
 
 end module Distribucio_Radial
 
-end program moduls_elena
+module Reescala_velocitats
+
+use READ_DATA
+
+IMPLICIT NONE
+
+contains
+
+    subroutine Velo_Rescaling(v,T)
+    IMPLICIT NONE
+    REAL*8 v(:,:),T,alpha
+    alpha=sqrt(3d0*n_particles*T/(2d0*KINETIK))
+    v=alpha*v
+    end subroutine Velo_Rescaling
+
+end module Reescala_velocitats
