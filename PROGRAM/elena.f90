@@ -1,4 +1,4 @@
-!!Creem els mòduls de les subrutines, posicions i velocitats inicials, Andersen i funcions de distribució radial:
+!!Creem els mÃ²duls de les subrutines, posicions i velocitats inicials, Andersen i funcions de distribuciÃ³ radial:
 
 module Iniciatitzar
 
@@ -30,7 +30,7 @@ contains
     RETURN
     end subroutine FCC_Initialize
 
-    subroutine Uniform_velocity(v)
+    subroutine Uniform_velocity(v,T)
     INTEGER :: i,j,seed
     REAL*8 :: v(:,:),vi,vtot,T
     seed=13
