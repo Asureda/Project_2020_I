@@ -1,14 +1,17 @@
 !!Creem els mòduls de les subrutines, posicions i velocitats inicials, Andersen i funcions de distribució radial:
+program moduls_elena
 
-call READ_DATA
+module Iniciatitzar
 
-module FCC_Initialize
+use READ_DATA
 
 IMPLICIT NONE
-    INTEGER :: n_particles,M,n,i,j,k
-    REAL*8 :: density,L,a
+
+contains
+
+    subroutine FCC_Initialize(r)
+    INTEGER :: n,i,j,k
     REAL*8 :: positions(n_particles,3)
-    COMMON/PARAMETERS/n_particles,M,density,L,a
     n=1
     !print*,n
     DO i=0,M-1
@@ -26,16 +29,11 @@ IMPLICIT NONE
     END DO
     PRINT*, 'particles positioned', n-1, 'of a total imput', n_particles
     RETURN
+    end subroutine FCC_Initialize
 
-end module FCC_Initialize
-
-module Uniform_velo
-
-IMPLICIT NONE
-    REAL*8 :: density,L,a
-    INTEGER :: n_particles,M,i,j,seed
+    subroutine Uniform_velocity
+    INTEGER :: i,j,seed
     REAL*8 :: velocity(n_particles,3),vi,vtot,T
-    COMMON/PARAMETERS/n_particles,M,density,L,a
     seed=13
     CALL SRAND(seed)
     DO i=1,3
@@ -50,16 +48,24 @@ IMPLICIT NONE
     !Resacling the velocities to the temperature
     CALL VELO_RESCALING(velocity,T)
     RETURN
+    end subroutine Uniform_velocity
 
-end module Uniform_velo
+end module Inicialitzar
 
-module Andersen
+module Andersen_modul
 
+use READ_DATA
+
+IMPLICIT NONE
+
+contains
+
+    subroutine Andersen(v,temp,h,n_particles)
     IMPLICIT NONE
-    INTEGER n_particles,i
-    REAL*8 temp,dt,nu,sigma,n1,n2,n3,n4,n5,n6
+    INTEGER i
+    REAL*8 temp,nu,n1,n2,n3,n4,n5,n6
     REAL*8, DIMENSION(n_particles,3) :: v
-    nu=0.1/dt
+    nu=0.1/h
     sigma=sqrt(temp)
     DO i=1,n_particles
         IF(RAND().lt.nu*dt)THEN
@@ -71,14 +77,22 @@ module Andersen
         END IF
     END DO
     RETURN
+    end subroutine Andersen
 
-end module Andersen
+end module Andersen_modul
 
-module Rad_Dist_Inter
+module Distribucio_Radial
 
+use READ_DATA
+
+IMPLICIT NONE
+
+contains
+
+    subroutine RAD_DIST_INTER(r,vec,dx_radial,n_radial,n_particles,L)
     IMPLICIT NONE
-    INTEGER n_radial,n_particles,i,coef,j
-    REAL*8 dx_radial,dist,vec(0:n_radial+1), r(n_particles,3),dx,dy,dz,PBC1,L
+    INTEGER n_radial,i,coef,j
+    REAL*8 dist,vec(0:n_radial+1), r(n_particles,3),dx,dy,dz,PBC1
     DO i=1,n_particles
         DO j=1,n_particles
             IF (i.ne.j) THEN
@@ -94,20 +108,21 @@ module Rad_Dist_Inter
         END DO
     END DO
     RETURN
+    end subroutine RAD_DIST_INTER
 
-end module Ras_Dist_Inter
-
-module Rad_Dist_Final
-
+    subroutine RAD_DIST_FINAL(vec,dx_radial,n_radial,n_gr_meas,rho)
     IMPLICIT NONE
     INTEGER n_radial,i,n_gr_meas
-    REAL*8 dx_radial,rho,vec(0:n_radial+1),result(0:n_radial+1),aux
+    REAL*8 vec(0:n_radial+1),result(0:n_radial+1),aux
     vec=vec/(1d0*n_gr_meas)
     DO i=2,n_radial
-        aux=(rho*4d0*3.1415*((((i)*dx_radial)**3d0)-(((i-1)*dx_radial)**3d0)))/3d0
+        aux=(density*4d0*3.1415*((((i)*dx_radial)**3d0)-(((i-1)*dx_radial)**3d0)))/3d0
         result(i)=vec(i)/aux
     END DO
     vec=result 
     RETURN
+    end subroutine RAD_DIST_FINAL
 
-end module Rad_Dist_Final 
+end module Distribucio_Radial
+
+end program moduls_elena
