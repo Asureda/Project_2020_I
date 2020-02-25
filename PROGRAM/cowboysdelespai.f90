@@ -4,6 +4,7 @@
 ! Modul per la distribucio uniforme de les velocitats
 MODULE Distribucio_Uniforme_vel
 use READ_DATA
+use Reescala_velocitats
 implicit none
 contains
 SUBROUTINE UNIFORM_VELO(velocity,T)
@@ -37,6 +38,8 @@ END MODULE Distribucio_Uniforme_vel
 ! Modul del cutoff
 MODULE Interaction_Cutoff_Modul
 use READ_DATA
+use Lennard_Jones
+use PBC
 implicit none
 contains
 SUBROUTINE INTERACTION_CUTOFF(positions,F,E,PBC,cutoff,pressure)
@@ -105,4 +108,74 @@ MODULE PBC
 use READ_DATA
 implicit none
 contains
+FUNCTION PBC1(x,L)
+!FUNCTION THAT RETURNS THE DISTANCE GIVEN PBC AND L
+    IMPLICIT NONE
+    REAL*8 x,L,PBC1
+    PBC1=x-int(2d0*x/L)*L
+    RETURN
+END FUNCTION
+FUNCTION PBC2(x,L)
+!FUNCTION THAT RETURNS THE DISTANCE GIVEN PBC AND L
+    IMPLICIT NONE
+    REAL*8 x,L,PBC2
+    IF(x.lt.0)THEN
+        x=L+mod(x,L)
+    ELSE IF(x.gt.L) THEN
+        x=mod(x,L)
+    END IF
+    PBC2=x
+    RETURN
+END FUNCTION
+END MODULE PBC
 
+! Modul de l'algoritme d'integració Verlet
+MODULE Verlet_Algorithm
+use READ_DATA
+use Interaction_Cutoff_Modul
+use PBC
+implicit none
+contains
+SUBROUTINE VELO_VERLET(r,v,f,h,pot,pressure)
+    INTEGER i,n_particles,M
+    REAL*8 h,r0(n_particles,3),r(n_particles,3),v0(n_particles,3),v(n_particles,3)
+    REAL*8 F(n_particles,3),f0(n_particles,3),pot,kin,cutoff,density,L,a,PBC2,pressure
+    REAL*8, EXTERNAL :: PBC1
+    COMMON/PARAMETERS/n_particles,M,density,L,a
+    r0=r
+    v0=v
+    f0=f
+    kin=0d0
+    cutoff=0.99*L*5d-1
+    !print*,'in verlet'
+    CALL INTERACTION_CUTOFF(r,f0,pot,PBC1,cutoff,pressure)
+    DO i=1,n_particles
+        r(i,:)=r0(i,:)+v0(i,:)*h+5d-1*f0(i,:)*h*h
+        r(i,1)=PBC2(r(i,1),L)
+        r(i,2)=PBC2(r(i,2),L)
+        r(i,3)=PBC2(r(i,3),L)
+    END DO
+    CALL INTERACTION_CUTOFF(r,f,pot,PBC1,cutoff,pressure)
+    DO i=1,n_particles
+        v(i,:)=v(i,:)+5d-1*(f0(i,:)+f(i,:))*h
+    END DO
+    !print*,'out verlet'
+    RETURN
+END SUBROUTINE
+END MODULE Verlet_Algorithm
+
+MODULE Kinetic_Energy
+    use READ_DATA
+    FUNCTION KINETIK(velocity)
+    IMPLICIT NONE
+    INTEGER n_particles,M,i
+    REAL*8 :: density,L,a
+    REAL*8 :: velocity(n_particles,3),KINETIK
+    COMMON/PARAMETERS/n_particles,M,density,L,a
+    KINETIK=0d0
+    DO i=1,n_particles
+        KINETIK=KINETIK+5d-1*(velocity(i,1)**2d0+velocity(i,2)**2d0+velocity(i,3)**2d0)
+    END DO
+    RETURN
+END FUNCTION KINETIK
+END MODULE Kinetic_Energy
