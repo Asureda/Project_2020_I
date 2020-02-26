@@ -6,6 +6,8 @@ IMPLICIT NONE
 
 contains
 
+KINETIK = KINETIK_ENERGY(v)
+
     subroutine Velo_Rescaling(v,T)
     IMPLICIT NONE
     REAL*8 v(:,:),T,alpha
