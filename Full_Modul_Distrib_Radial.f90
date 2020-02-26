@@ -1,7 +1,7 @@
 module Distribucio_Radial
 
 use READ_DATA
-use LJ_PBC
+use PBC
 
 IMPLICIT NONE
 
