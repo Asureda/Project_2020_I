@@ -15,7 +15,7 @@ MODULE READ_DATA
 
     !Additional variables
     INTEGER :: M,n_radial
-    REAL*8 :: L,a,T_a,kinetik,potential,pressure
+    REAL*8 :: L,a,T_a,kinetic,potential,pressure
     !LOGICAL :: is_thermostat
     CONTAINS
     SUBROUTINE READ_ALL_DATA()
@@ -66,6 +66,16 @@ MODULE READ_DATA
         potential=0d0
         pressure=0d0
     END SUBROUTINE
+    FUNCTION KINETIC_ENERGY(v)
+        IMPLICIT NONE
+        INTEGER i
+        REAL*8 :: v(:,:),KINETIC_ENERGY
+        KINETIC_ENERGY=0d0
+        DO i=1,n_particles
+            KINETIC_ENERGY=KINETIC_ENERGY+5d-1*(v(i,1)**2d0+v(i,2)**2d0+v(i,3)**2d0)
+        END DO
+        RETURN
+    END FUNCTION KINETIK
 
 END MODULE
 
