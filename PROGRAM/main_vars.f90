@@ -1,8 +1,8 @@
 MODULE ALLOCATE_VARS
     USE READ_DATA
     IMPLICIT NONE
-    INTEGER seed
-    REAL*8 temp_re,energy_re,dist_re,temp_re,press_re,n_mols,total_mass,rho_re
+    INTEGER seed,n_verlet
+    REAL*8 energy_re,dist_re,temp_re,press_re,n_mols,total_mass,rho_re
     REAL*8,DIMENSION(:,:),ALLOCATABLE :: positions, velocities, force
     REAL*8,DIMENSION(:),ALLOCATABLE :: g_r
 
@@ -23,6 +23,12 @@ MODULE ALLOCATE_VARS
         n_mols=n_particles/n_avog
         total_mass=n_mols*mass
         rho_re=mass*1d24/(sigma**3d0*n_avog)
+
+        !verlet integration vars
+        n_verlet=int(t_b-t_a)/h  !number of time inegration steps
+        t=t_a
+        g_r=0d0
+        n_gr_meas=0
 
     END SUBROUTINE
 END MODULE
