@@ -10,6 +10,7 @@ PROGRAM SEQUENTIAL_MD
 
   IMPLICIT NONE
 
+  call srand(seed)
   call read_all_data()
   call other_global_vars()
   call INITIALIZE_VARS()
@@ -27,7 +28,7 @@ PROGRAM SEQUENTIAL_MD
   open(55,file='distriv_funct.dat')
   open(56,file='positions.xyz')
   DO i=1,n_verlet
-    t=ta+i*h
+    t=t_a+i*h
     call VELO_VERLET(r,v,F)
     if(is_thermostat.eqv..true.)THEN
       call andersen(v,T_therm)
