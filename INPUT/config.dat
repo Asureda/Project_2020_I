@@ -1,0 +1,8 @@
+100.0           # Temperature of the initial melting
+.TRUE.            # Print thermodynamic magnitudes
+10              # Number of iteratoins to measure thermodynamic mag.
+.FALSE.           # Compute the radial distribution function
+100             # Number of iteratoins to to compute the function
+.FALSE.           # Compute the time-evolution of the positions
+100             # Number of iteratoins to to compute the position
+END
