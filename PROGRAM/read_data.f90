@@ -61,7 +61,7 @@ MODULE READ_DATA
         M=nint(((n_particles*1d0)/4d0)**(1d0/3d0))   !Number of cells
         a=L/(M*1d0)                                  !dimension of the cells
         n_radial=int(L/dx_radial)
-        ta=0d0
+        t_a=0d0
         kinetic=0d0
         potential=0d0
         pressure=0d0
