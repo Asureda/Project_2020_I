@@ -21,7 +21,7 @@ energy.eps : Results.txt
     gnuplot Scripts_GNUPlot/plot_rdf.gnu
     @echo Copying to Results folder...
     mkdir -p Results
-    cp *.txt *.eps *.xyz Results
+    cp *.txt *.dat *.eps *.xyz Results
     @echo "Fet!"
 
 # Execucio del main program
@@ -36,7 +36,7 @@ $(TARGET).x : $(TARGET).o energy.o PBC.o verlet.o vel_initial.o Full_modul_Inici
 
 # Tots els fitxers amb extensio .f90 son compilats a objectes .o
 %.o : %.f90
-    @echo "Compiliant les subrutines necessaries..."
+    @echo "Compilant les subrutines necessaries..."
     $(F90) $(OPT) $(FLAGS) -c $<
 
 
@@ -59,7 +59,7 @@ help :
 ## backup : fer una copia comprimida del codi basic
 .PHONY : backup
 backup:
-    tar -czvf "backup.tar.gz" Code/*.f90
+    tar -czvf "backup.tar.gz" PROGRAM/*.f90
 
 ## clean_all : regla per fer un clean dels objectes executables, resultats i imatges
 .PHONY : clean_all
