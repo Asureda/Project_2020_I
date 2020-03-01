@@ -6,12 +6,11 @@ IMPLICIT NONE
 
 contains
 
-KINETIK = KINETIK_ENERGY(v)
-
     subroutine Velo_Rescaling(v,T)
     IMPLICIT NONE
     REAL*8 v(:,:),T,alpha
-    alpha=sqrt(3d0*n_particles*T/(2d0*KINETIK))
+    KINETIC = KINETIC_ENERGY(v)
+    alpha=sqrt(3d0*n_particles*T/(2d0*KINETIC))
     v=alpha*v
     end subroutine Velo_Rescaling
 
