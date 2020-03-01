@@ -14,7 +14,7 @@ contains
     nu=0.1/h
     sigma=sqrt(temp)
     DO i=1,n_particles
-        IF(RAND().lt.nu*dt)THEN
+        IF(RAND().lt.nu*h)THEN
             n1=RAND();n2=RAND()
             n3=RAND();n4=RAND()
             n5=RAND();n6=RAND()
