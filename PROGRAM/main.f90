@@ -9,6 +9,7 @@ PROGRAM SEQUENTIAL_MD
   use Reescala_velocitats
 
   IMPLICIT NONE
+  INTEGER k
 
   call srand(seed)
   !LLEGIM EL FITXER INPUT AMB LES SEGÜENTS DADES:
@@ -71,23 +72,22 @@ PROGRAM SEQUENTIAL_MD
       call RAD_DIST_INTER(r,g_r) !càlcul g(r) a cada pas
       n_gr_meas=n_gr_meas+1
     endif
+    IF(is_time_evol.eqv..TRUE.)THEN
+      WRITE(54,*)n_particles
+      WRITE(54,*)
+      DO k=1,n_particles
+        WRITE(54,*)'X',r(k,:)
+      END DO
+    END IF
   enddo
   if((is_compute_gr.eqv..true.))then
     call RAD_DIST_INTER(r,g_r)
     n_gr_meas=n_gr_meas+1
     call RAD_DIST_FINAL(g_r,n_gr_meas) !càlcul g(r) com a cúmul
-    do i=1,n_radial
-      write(53,*)dx_radial*i,g_r(i)
+    print*,g_r
+    do k=1,n_radial
+      write(53,*)dx_radial*k,g_r(k)
     enddo
   endif
   print*,'PROGRAM END'
-
-
-
-
-
-
-
-
-
 END PROGRAM SEQUENTIAL_MD

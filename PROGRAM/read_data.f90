@@ -64,7 +64,7 @@ MODULE READ_DATA
         L=((n_particles*1d0)/density)**(1d0/3d0)     ! Longitud de la caixa de simulacio
         M=nint(((n_particles*1d0)/4d0)**(1d0/3d0))   ! Numero de nodes en cada dimensio
         a=L/(M*1d0)                                  ! Aresta de cada cel·la unitat
-        n_radial=int(L/dx_radial)
+        n_radial=int(0.5*L/dx_radial)
         t_a=0d0
         kinetic=0d0
         potential=0d0
