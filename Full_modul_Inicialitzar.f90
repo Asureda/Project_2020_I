@@ -1,4 +1,4 @@
-module Iniciatitzar
+module Inicialitzar
 
 use READ_DATA
 
