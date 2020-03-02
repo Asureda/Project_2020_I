@@ -15,8 +15,9 @@ PROGRAM SEQUENTIAL_MD
   call other_global_vars()
   call INITIALIZE_VARS()
   call FCC_Initialize(r)
-  call Uniform_velocity(v,T)
-  call VELO_RESCALING(v,T_therm_prov)
+  call Uniform_velocity(v,T_ini)
+  call VELO_RESCALING_MOD(v,T_therm_prov)
+  print*,'inicial melting'
   DO i=1,n_melting
     call velo_verlet(r,v,F)
     call andersen(v,T_therm_prov)
@@ -24,9 +25,9 @@ PROGRAM SEQUENTIAL_MD
   print*,'FINAL MELTING'
   call Velo_Rescaling(v,T_ini)
   open(51,file='thermodynamics_reduced.dat')
-  open(54,file='thermodynamics_real.dat')
-  open(55,file='distriv_funct.dat')
-  open(56,file='positions.xyz')
+  open(52,file='thermodynamics_real.dat')
+  open(53,file='distriv_funct.dat')
+  open(54,file='positions.xyz')
   DO i=1,n_verlet
     t=t_a+i*h
     call VELO_VERLET(r,v,F)
