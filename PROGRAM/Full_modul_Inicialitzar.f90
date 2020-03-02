@@ -1,6 +1,7 @@
 module Inicialitzar
 
 use READ_DATA
+use Reescala_velocitats
 
 IMPLICIT NONE
 
