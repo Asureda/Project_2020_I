@@ -15,7 +15,7 @@ contains
     nu=0.1/h
     sigma=sqrt(temp)
     DO i=1,n_particles
-        IF(RAND().lt.nu*dt)THEN
+        IF(RAND().lt.nu*h)THEN
         !Iniciem aquest bucle per tal de fer una transformació de Box - Muller i obtenir una distribució normal de les velocitats.
             n1=RAND();n2=RAND()
             n3=RAND();n4=RAND()

@@ -9,6 +9,7 @@ PROGRAM SEQUENTIAL_MD
   use Reescala_velocitats
 
   IMPLICIT NONE
+  INTEGER k
 
   call srand(seed)
   !LLEGIM EL FITXER INPUT AMB LES SEGÜENTS DADES:
@@ -26,7 +27,7 @@ PROGRAM SEQUENTIAL_MD
   !FEM UN REESCALATGE DE LES VELOCITATS A LA TEMPERATURA INICIAL
   !LI DONEM UNA TEMPERATURA INICIAL SUFICIENTMENT GRAN COM PER DESFER LA ESTRUCTURA
   !CRISTALINA (MELTING)
-  call VELO_RESCALING(v,T_therm_prov)
+  call VELO_RESCALING_MOD(v,T_therm_prov)
   !UN COP CALCULAT EL NÚMERO DE ITERACIONS NECESSARIES PER FONDRE EL SÒLID INICIAL
   !APLIQUEM EL TERMOSTAT DE ANDERSEN TANTS COPS COM SIGUIN NECESSARIS
   DO i=1,n_melting
@@ -43,9 +44,9 @@ PROGRAM SEQUENTIAL_MD
   !PRESSIÓ, EN UNITATS REDUÏDES I NO REDUÏDES I LES POSICIONS DE LES PARTÍCULES
   !I LES ESCRIBIIM EN UN FITXER OUTPUT
   call Velo_Rescaling(v,T_ini)
-  open(51,file='thermodunamics_reduced.dat')
-  open(52,file='thermodunamics_real.dat')
-  open(53,file='distriv_funct.dat')
+  open(51,file='thermodynamics_reduced.dat')
+  open(52,file='thermodynamics_real.dat')
+  open(53,file='distrib_funct.dat')
   open(54,file='positions.xyz')
   !APLIQUEM L'ALGORITME DE VERLET I EL TERMOSTAT D'ANDERSEN PER OBTENIR
   !VELOCITAT, POSICIONS, TEMPERATURES I
@@ -71,23 +72,22 @@ PROGRAM SEQUENTIAL_MD
       call RAD_DIST_INTER(r,g_r) !càlcul g(r) a cada pas
       n_gr_meas=n_gr_meas+1
     endif
+    IF(is_time_evol.eqv..TRUE.)THEN
+      WRITE(54,*)n_particles
+      WRITE(54,*)
+      DO k=1,n_particles
+        WRITE(54,*)'X',r(k,:)
+      END DO
+    END IF
   enddo
   if((is_compute_gr.eqv..true.))then
     call RAD_DIST_INTER(r,g_r)
     n_gr_meas=n_gr_meas+1
     call RAD_DIST_FINAL(g_r,n_gr_meas) !càlcul g(r) com a cúmul
-    do i=1,n_radial
-      write(53,*)dx_radial*i,g_r(i)
+    print*,g_r
+    do k=1,n_radial
+      write(53,*)dx_radial*k,g_r(k)
     enddo
   endif
   print*,'PROGRAM END'
-
-
-
-
-
-
-
-
-
 END PROGRAM SEQUENTIAL_MD

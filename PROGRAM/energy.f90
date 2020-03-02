@@ -40,8 +40,6 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
             !print*,'hola2'
         END DO
     END DO
-    !print*,'en inter'
-    RETURN
 END SUBROUTINE INTERACTION_CUTOFF
 
 END MODULE Interaction_Cutoff_Modul
