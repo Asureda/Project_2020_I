@@ -9,9 +9,9 @@
 # Tasks
 
 * Input Files and Lecture
-  - Silvia
+  - Silvia (Changed to Oriol with MANAGING)
 * Main Program and Managing
-  - Oriol
+  - Oriol (Changed to Silvia, main program part)
 * Initial position and velocity, Thermostat
   - Elena
 * Distribution function
