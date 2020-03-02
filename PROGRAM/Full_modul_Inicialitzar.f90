@@ -9,7 +9,7 @@ contains
     subroutine FCC_Initialize(r)
     !En aquesta primera subrutina, definirem les posicions inicials de la nostra configuració. 
     INTEGER :: n,i,j,k
-    REAL*8 :: positions(:,:)
+    REAL*8 :: r(:,:)
     n=1
     !print*,n
     !Definim aquesta configuració en les tres dimensions de l'espai
@@ -17,11 +17,11 @@ contains
         DO j=0,M-1
             DO k=0,M-1
                 !print*,size(positions)
-                positions(n,:)=a*(/i,j,k/)
+                r(n,:)=a*(/i,j,k/)
                 !print*,positions(n,:)
-                positions(n+1,:)=positions(n,:)+a*(/0.5,0.5,0.0/)
-                positions(n+2,:)=positions(n,:)+a*(/0.5,0.0,0.5/)
-                positions(n+3,:)=positions(n,:)+a*(/0.0,0.5,0.5/)
+                r(n+1,:)=r(n,:)+a*(/0.5,0.5,0.0/)
+                r(n+2,:)=r(n,:)+a*(/0.5,0.0,0.5/)
+                r(n+3,:)=r(n,:)+a*(/0.0,0.5,0.5/)
                 n=n+4
             END DO
         END DO
@@ -46,8 +46,16 @@ contains
         END DO
         v(n_particles,i)=-vtot
     END DO
-    CALL VELO_RESCALING(v,T)
+    CALL VELO_RESCALING_MOD(v,T)
     RETURN
     end subroutine Uniform_velocity
+    subroutine Velo_Rescaling_mod(v,T)
+    !Amb aquesta subrutina trobarem la velocitat, un cop hem reescalat, a una temperatura i un número de partícules concret
+    IMPLICIT NONE
+    REAL*8 v(:,:),T,alpha,KINETIC_LOC
+    KINETIC_LOC=KINETIC_ENERGY(v)
+    alpha=sqrt(3d0*n_particles*T/(2d0*KINETIC_LOC))
+    v=alpha*v
+    end subroutine Velo_Rescaling_mod
 
 end module Inicialitzar

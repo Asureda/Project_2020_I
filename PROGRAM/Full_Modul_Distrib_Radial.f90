@@ -12,7 +12,7 @@ contains
     !Aquesta subrutina, ens permetrà calcular a partir dels diferencials de distància, el valor de la distribució radial
     IMPLICIT NONE
     INTEGER i,coef,j
-    REAL*8 dist,vec(:,:), r(:,:),dx,dy,dz
+    REAL*8 dist,vec(:), r(:,:),dx,dy,dz
     DO i=1,n_particles
         DO j=1,n_particles
             IF (i.ne.j) THEN

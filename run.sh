@@ -18,7 +18,7 @@ cd ..
 echo "Moving files from PROGRAM to OUTPUT"
 mv PROGRAM/thermodynamics_reduced.dat OUTPUT/thermodynamics_reduced.dat
 mv PROGRAM/thermodynamics_real.dat OUTPUT/thermodynamics_real.dat
-mv PROGRAM/distriv_funct.dat OUTPUT/distriv_funct.dat
+mv PROGRAM/distrib_funct.dat OUTPUT/distrib_funct.dat
 mv PROGRAM/positions.xyz OUTPUT/positions.xyz
 echo "Deleting all data files from PROGRAM"
 rm PROGRAM/*.dat
