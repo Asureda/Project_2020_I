@@ -7,6 +7,7 @@ IMPLICIT NONE
 contains
 
     subroutine Andersen(v,temp)
+    !Aquesta subrutina serveix per calcular les noves velocitats un cop apliquem el termostat d'Andersen 
     IMPLICIT NONE
     INTEGER i
     REAL*8 temp,nu,n1,n2,n3,n4,n5,n6
@@ -15,6 +16,7 @@ contains
     sigma=sqrt(temp)
     DO i=1,n_particles
         IF(RAND().lt.nu*dt)THEN
+        !Iniciem aquest bucle per tal de fer una transformació de Box - Muller i obtenir una distribució normal de les velocitats.
             n1=RAND();n2=RAND()
             n3=RAND();n4=RAND()
             n5=RAND();n6=RAND()
