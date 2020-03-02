@@ -5,8 +5,8 @@
 2.64         # sigma of the gas
 0.090794       # epsilon of the gas
 4.0026        # mass
-50.0        # initial temperature
-.TRUE.        # to put a thermostat
+27.5        # initial temperature
+.FALSE.        # to put a thermostat
 300.0       # if true, temperature of the thermostat
-0.05         # precision for the radial distribution function
+0.01         # precision for the radial distribution function
 END

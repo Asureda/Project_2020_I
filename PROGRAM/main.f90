@@ -84,7 +84,6 @@ PROGRAM SEQUENTIAL_MD
     call RAD_DIST_INTER(r,g_r)
     n_gr_meas=n_gr_meas+1
     call RAD_DIST_FINAL(g_r,n_gr_meas) !càlcul g(r) com a cúmul
-    print*,g_r
     do k=1,n_radial
       write(53,*)dx_radial*k,g_r(k)
     enddo

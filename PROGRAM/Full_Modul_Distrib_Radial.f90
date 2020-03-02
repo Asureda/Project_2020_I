@@ -40,7 +40,6 @@ contains
     result=0d0
     DO i=2,n_radial
         aux=(density*4d0*3.1415*((((i)*dx_radial)**3d0)-(((i-1)*dx_radial)**3d0)))/3d0
-        !aux=(density*4d0*3.1415*((((i)*dx_radial)**3d0)-(((i-1)*dx_radial)**3d0)))/3d0
         result(i)=vec(i)/aux
     END DO
     vec=0d0
