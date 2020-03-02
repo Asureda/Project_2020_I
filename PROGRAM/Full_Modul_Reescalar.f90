@@ -6,11 +6,14 @@ IMPLICIT NONE
 
 contains
 
+!Cridem la funció definida a l'arxiu input, per tal de definir l'energia cinètica:
+KINETIK = KINETIK_ENERGY(v)
+
     subroutine Velo_Rescaling(v,T)
+    !Amb aquesta subrutina trobarem la velocitat, un cop hem reescalat, a una temperatura i un número de partícules concret
     IMPLICIT NONE
     REAL*8 v(:,:),T,alpha
-    alpha=sqrt(3d0*n_particles*T/(2d0*KINETIC))
-    print*,t,alpha
+    alpha=sqrt(3d0*n_particles*T/(2d0*KINETIK))
     v=alpha*v
     end subroutine Velo_Rescaling
 
