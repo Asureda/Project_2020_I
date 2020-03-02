@@ -15,12 +15,8 @@ contains
     nu=0.1/h
     sigma=sqrt(temp)
     DO i=1,n_particles
-<<<<<<< HEAD:Full_Modul_Andersen.f90
         IF(RAND().lt.nu*dt)THEN
         !Iniciem aquest bucle per tal de fer una transformació de Box - Muller i obtenir una distribució normal de les velocitats.
-=======
-        IF(RAND().lt.nu*h)THEN
->>>>>>> master:PROGRAM/Full_Modul_Andersen.f90
             n1=RAND();n2=RAND()
             n3=RAND();n4=RAND()
             n5=RAND();n6=RAND()
