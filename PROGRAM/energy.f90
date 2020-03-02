@@ -5,9 +5,10 @@ use Lennard_Jones
 use PBC
 implicit none
 contains
+
 SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
-!COMPUTING THE TOTAL INTERACTION ENERGY GIVEN AN EXTENAL FUNCTION FOR POTENCIAL
-!AND BOUNDARY CONDITIONS
+! Calcul de l'energia d'interaccio total donades una subrutina externa pel potencial
+! Lennard-Jones i per les condicions periodiques de contorn. Tambe calculem la pressio
     IMPLICIT NONE
     INTEGER :: i,j
     REAL*8 :: cutoff,pot
@@ -20,7 +21,7 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
     pressure=0.0
     !print*,'hola'
     DO i=1,n_particles
-        DO j=i+1,n_particles
+        DO j=i+1,n_particles                   ! Per no sobrecomptar interaccions
             dx=PBC1(r(i,1)-r(j,1),L)
             dy=PBC1(r(i,2)-r(j,2),L)
             dz=PBC1(r(i,3)-r(j,3),L)
