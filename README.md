@@ -9,3 +9,5 @@ TO RUN THE PROGRAM:
    
 TO SEE THE RESULTS:
 	Go to folder OUTPUT where there are located the different figures and files.
+	
+Note: The run.sh script, moves files between folders, executes the MAKEFILE and generate the Plots
