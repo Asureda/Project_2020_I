@@ -7,10 +7,12 @@ IMPLICIT NONE
 contains
 
     subroutine FCC_Initialize(r)
+    !En aquesta primera subrutina, definirem les posicions inicials de la nostra configuració. 
     INTEGER :: n,i,j,k
     REAL*8 :: positions(:,:)
     n=1
     !print*,n
+    !Definim aquesta configuració en les tres dimensions de l'espai
     DO i=0,M-1
         DO j=0,M-1
             DO k=0,M-1
@@ -29,6 +31,8 @@ contains
     end subroutine FCC_Initialize
 
     subroutine Uniform_velocity(v,T)
+    !Aquesta subrutina, ens permetrà seguir una distribució normal al crear la matriu de les velocitats de la simulació.
+    !Sempre es farà a una temperatura concreta
     INTEGER :: i,j,seed
     REAL*8 :: v(:,:),vi,vtot,T
     seed=13
@@ -42,7 +46,6 @@ contains
         END DO
         v(n_particles,i)=-vtot
     END DO
-    !Resacling the velocities to the temperature
     CALL VELO_RESCALING(v,T)
     RETURN
     end subroutine Uniform_velocity
