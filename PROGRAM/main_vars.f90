@@ -1,9 +1,9 @@
 MODULE ALLOCATE_VARS
     USE READ_DATA
     IMPLICIT NONE
-    INTEGER seed,n_verlet
-    REAL*8 energy_re,dist_re,temp_re,press_re,n_mols,total_mass,rho_re
-    REAL*8,DIMENSION(:,:),ALLOCATABLE :: positions, velocities, force
+    INTEGER seed,n_verlet,n_gr_meas,i
+    REAL*8 time_re,energy_re,dist_re,temp_re,press_re,n_mols,total_mass,rho_re,t,temp_instant
+    REAL*8,DIMENSION(:,:),ALLOCATABLE :: r, v, f
     REAL*8,DIMENSION(:),ALLOCATABLE :: g_r
 
     CONTAINS
@@ -25,7 +25,7 @@ MODULE ALLOCATE_VARS
         rho_re=mass*1d24/(sigma**3d0*n_avog)
 
         !verlet integration vars
-        n_verlet=int(t_b-t_a)/h  !number of time inegration steps
+        n_verlet=int((t_b-t_a)/h)  !number of time inegration steps
         t=t_a
         g_r=0d0
         n_gr_meas=0

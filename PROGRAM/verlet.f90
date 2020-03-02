@@ -1,4 +1,8 @@
 ! Modul de l'algoritme d'integració Verlet
+! Integració de les equacions de Newton mitjançant l'integració de Verlet 
+! El modul consta de dos parts, en primer lloc el càlcul de les velocitats i posicions a partir de les configuracions inicials
+! En segon lloc calcular les noves forces a partir de les posicions anteriors i tot seguit fer el càlcul de les noves velocitats v(t+h) a partir de les
+! noves forces.
 MODULE Verlet_Algorithm
 use READ_DATA
 use Interaction_Cutoff_Modul

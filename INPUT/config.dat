@@ -1,4 +1,5 @@
 100.0           # Temperature of the initial melting
+15              # Meltin Velo Verlet Intagration Steps
 .TRUE.            # Print thermodynamic magnitudes
 10              # Number of iteratoins to measure thermodynamic mag.
 .FALSE.           # Compute the radial distribution function

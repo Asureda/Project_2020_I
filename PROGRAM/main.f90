@@ -1,7 +1,7 @@
 PROGRAM SEQUENTIAL_MD
   use READ_DATA
   use ALLOCATE_VARS
-  use Iniciatitzar
+  use Inicialitzar
   use Distribucio_Uniforme_vel
   use Verlet_Algorithm
   use Andersen_modul
@@ -22,7 +22,7 @@ PROGRAM SEQUENTIAL_MD
   !DEFINIM LA CONFIGURACIÓ INICIAL DE LES PARTICULES COM UNA XARXA FCC
   call FCC_Initialize(r)
   !LI DONEM UNA VELOCITAT INICIAL A LES PARTICULES (VELOCITATS INICIALS RANDOM)
-  call Uniform_velocity(v,T)
+  call Uniform_velocity(v,T_ini)
   !FEM UN REESCALATGE DE LES VELOCITATS A LA TEMPERATURA INICIAL
   !LI DONEM UNA TEMPERATURA INICIAL SUFICIENTMENT GRAN COM PER DESFER LA ESTRUCTURA
   !CRISTALINA (MELTING)
@@ -44,9 +44,9 @@ PROGRAM SEQUENTIAL_MD
   !I LES ESCRIBIIM EN UN FITXER OUTPUT
   call Velo_Rescaling(v,T_ini)
   open(51,file='thermodunamics_reduced.dat')
-  open(54,file='thermodunamics_real.dat')
-  open(55,file='distriv_funct.dat')
-  open(56,file='positions.xyz')
+  open(52,file='thermodunamics_real.dat')
+  open(53,file='distriv_funct.dat')
+  open(54,file='positions.xyz')
   !APLIQUEM L'ALGORITME DE VERLET I EL TERMOSTAT D'ANDERSEN PER OBTENIR
   !VELOCITAT, POSICIONS, TEMPERATURES I
   !PRESSIÓ, EN UNITATS REDUÏDES I NO REDUÏDES, I LES POSICIONS DE LES PARTÍCULES
@@ -64,7 +64,8 @@ PROGRAM SEQUENTIAL_MD
       temp_instant=2d0*kinetic/(3d0*n_particles)
       pressure=(density*temp_instant*pressure/(3d0*L**3d0))
       write(51,*)t,kinetic,potential,(kinetic+potential),temp_instant,pressure
-      write(52,*)t*time_re,kinetic*energy_re,potential*energy_re,(kinetic+potential)*energy_re,temp_instant*temp_re,pressure*press_re
+      write(52,*)t*time_re,kinetic*energy_re,potential*energy_re,(kinetic+potential)*energy_re,temp_instant*&
+                                                                                    &temp_re,pressure*press_re
     endif
     if((mod(i,n_meas_gr).eq.0).and.(is_compute_gr.eqv..true.))then
       call RAD_DIST_INTER(r,g_r) !càlcul g(r) a cada pas

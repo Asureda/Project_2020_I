@@ -37,14 +37,24 @@ contains
         vtot=0
         DO j=1,n_particles-1
             vi=2*RAND()-1
+            !print*,vi
             v(j,i)=vi
             vtot=vtot+vi
         END DO
         v(n_particles,i)=-vtot
     END DO
     !Resacling the velocities to the temperature
-    CALL VELO_RESCALING(v,T)
+    CALL VELO_RESCALING_MOD(v,T)
+    print*,v
     RETURN
     end subroutine Uniform_velocity
+    subroutine Velo_Rescaling_mod(v,T)
+    IMPLICIT NONE
+    REAL*8 v(:,:),T,alpha,KINETIC_LOC
+    KINETIC_LOC = KINETIC_ENERGY(v)
+    alpha=sqrt(3d0*n_particles*T/(2d0*KINETIC_LOC))
+    print*,t,alpha
+    v=alpha*v
+    end subroutine Velo_Rescaling_MOD
 
 end module Inicialitzar
