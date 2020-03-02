@@ -6,7 +6,7 @@
 0.998       # epsilon of the gas
 40.0        # mass
 10.0        # initial temperature
-TRUE        # to put a thermostat
+.TRUE.        # to put a thermostat
 100.0       # if true, temperature of the thermostat
 0.1         # precision for the radial distribution function
 END
