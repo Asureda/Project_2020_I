@@ -32,13 +32,13 @@ contains
     end subroutine RAD_DIST_INTER
 
     subroutine RAD_DIST_FINAL(vec,n_gr_meas)
-    !Aquesta subrutina ens permet 
+    !Per tal de fer un càlcul correcte, s'han de fer un cúmul de g(r)
+    !Aquesta subrutina ens permet calcular el promig dels valors anteriors
     IMPLICIT NONE
     INTEGER i,n_gr_meas
     REAL*8 vec(0:n_radial+1),result(0:n_radial+1),aux
     vec=vec/(1d0*n_gr_meas)
     DO i=2,n_radial
-        !Fem aquest bucle, des de 2 fins a n_radial per analitzar cada 
         aux=(density*4d0*3.1415*((((i)*dx_radial)**3d0)-(((i-1)*dx_radial)**3d0)))/3d0
         result(i)=vec(i)/aux
     END DO
