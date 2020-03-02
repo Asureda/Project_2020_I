@@ -1,7 +1,7 @@
 PROGRAM SEQUENTIAL_MD
   use READ_DATA
   use ALLOCATE_VARS
-  use Iniciatitzar
+  use Inicialitzar
   use Distribucio_Uniforme_vel
   use Verlet_Algorithm
   use Andersen_modul
@@ -23,8 +23,8 @@ PROGRAM SEQUENTIAL_MD
   end do
   print*,'FINAL MELTING'
   call Velo_Rescaling(v,T_ini)
-  open(51,file='thermodunamics_reduced.dat')
-  open(54,file='thermodunamics_real.dat')
+  open(51,file='thermodynamics_reduced.dat')
+  open(54,file='thermodynamics_real.dat')
   open(55,file='distriv_funct.dat')
   open(56,file='positions.xyz')
   DO i=1,n_verlet
@@ -37,7 +37,8 @@ PROGRAM SEQUENTIAL_MD
       temp_instant=2d0*kinetic/(3d0*n_particles)
       pressure=(density*temp_instant*pressure/(3d0*L**3d0))
       write(51,*)t,kinetic,potential,(kinetic+potential),temp_instant,pressure
-      write(52,*)t*time_re,kinetic*energy_re,potential*energy_re,(kinetic+potential)*energy_re,temp_instant*temp_re,pressure*press_re
+      write(52,*)t*time_re,kinetic*energy_re,potential*energy_re,(kinetic+potential)*energy_re,temp_instant*&
+                                                                                    &temp_re,pressure*press_re
     endif
     ! el seguent if sera x fer un fitxer xyz pel vmd :)
     !if()THEN
