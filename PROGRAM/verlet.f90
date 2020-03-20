@@ -23,6 +23,7 @@ SUBROUTINE VELO_VERLET(r,v,F)
     !END DO
     DO i=1,n_particles
         r(i,:)=r0(i,:)+v0(i,:)*h+5d-1*F0(i,:)*h*h
+        !r(i,:)=r(i,:)+v(i,:)*h+5d-1*F(i,:)*h*h
         r(i,1)=PBC2(r(i,1),L)
         r(i,2)=PBC2(r(i,2),L)
         r(i,3)=PBC2(r(i,3),L)
@@ -31,6 +32,7 @@ SUBROUTINE VELO_VERLET(r,v,F)
     kinetic=0d0
     DO i=1,n_particles
         v(i,:)=v0(i,:)+5d-1*(F(i,:)+F0(i,:))*h
+        !v(i,:)=v(i,:)+5d-1*F(i,:)*h
         kinetic=kinetic+5d-1*(v(i,1)**2d0+v(i,2)**2d0+v(i,3)**2d0)
     END DO
     !print*,'out verlet'

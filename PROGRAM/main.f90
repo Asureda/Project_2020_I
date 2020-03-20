@@ -3,6 +3,7 @@ PROGRAM SEQUENTIAL_MD
   use ALLOCATE_VARS
   use Inicialitzar
   use Distribucio_Uniforme_vel
+  use Interaction_Cutoff_Modul
   use Verlet_Algorithm
   use Andersen_modul
   use Distribucio_Radial
@@ -21,6 +22,9 @@ PROGRAM SEQUENTIAL_MD
   !INICITALITZEM LES VARIABLES D'ESTAT EN UNITATS REDUÏDES
   call INITIALIZE_VARS()
   !DEFINIM LA CONFIGURACIÓ INICIAL DE LES PARTICULES COM UNA XARXA FCC
+!
+
+!
   call FCC_Initialize(r)
   !LI DONEM UNA VELOCITAT INICIAL A LES PARTICULES (VELOCITATS INICIALS RANDOM)
   call Uniform_velocity(v,T_ini)
@@ -30,6 +34,8 @@ PROGRAM SEQUENTIAL_MD
   call VELO_RESCALING_MOD(v,T_therm_prov)
   !UN COP CALCULAT EL NÚMERO DE ITERACIONS NECESSARIES PER FONDRE EL SÒLID INICIAL
   !APLIQUEM EL TERMOSTAT DE ANDERSEN TANTS COPS COM SIGUIN NECESSARIS
+  !cutoff_aux=0.99*L*5d-1
+  !CALL INTERACTION_CUTOFF(r,F,cutoff_aux)
   DO i=1,n_melting
     call velo_verlet(r,v,F) !EN UNA REGIÓ LxL AMB UNES CONDICIONS DE CONTORN PERIODIQUES
                             ! EN FUNCIO DE LES FORCES D'INTERACCIÓ S'ACTUALITZEN LES VELOCITATS
@@ -52,6 +58,10 @@ PROGRAM SEQUENTIAL_MD
   !VELOCITAT, POSICIONS, TEMPERATURES I
   !PRESSIÓ, EN UNITATS REDUÏDES I NO REDUÏDES, I LES POSICIONS DE LES PARTÍCULES
   !I LES ESCRIBIM EN UN FITXER OUTPUT, PER N TIME STEPS D'UN INTERVAL DE TEMPS
+  !cutoff_aux=0.99*L*5d-1
+  !CALL INTERACTION_CUTOFF(r,F,cutoff_aux)
+  pressure=(density*temp_instant+pressure/(3d0*L**3d0))
+  print*,'pres',press_re,pressure,pressure*press_re
   DO i=1,n_verlet
     t=t_a+i*h
     call VELO_VERLET(r,v,F)
@@ -63,7 +73,7 @@ PROGRAM SEQUENTIAL_MD
   !DEL RADI
     if((mod(i,n_meas).eq.0).and.(is_print_thermo.eqv..true.))then
       temp_instant=2d0*kinetic/(3d0*n_particles)
-      pressure=(density*temp_instant*pressure/(3d0*L**3d0))
+      pressure=(density*temp_instant+pressure/(3d0*L**3d0))
       write(51,*)t,kinetic,potential,(kinetic+potential),temp_instant,pressure
       write(52,*)t*time_re,kinetic*energy_re,potential*energy_re,(kinetic+potential)*energy_re,temp_instant*&
                                                                                     &temp_re,pressure*press_re
