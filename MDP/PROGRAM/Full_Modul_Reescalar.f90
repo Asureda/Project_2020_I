@@ -14,6 +14,7 @@ contains
     REAL*8 v(:,:),T,alpha
     alpha=sqrt(3d0*n_particles*T/(2d0*KINETIC))
     v=alpha*v
+    
     end subroutine Velo_Rescaling
 
 end module Reescala_velocitats
