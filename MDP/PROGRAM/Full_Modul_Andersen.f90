@@ -1,6 +1,7 @@
 module Andersen_modul
 
 use READ_DATA
+use matrix
 
 IMPLICIT NONE
 
