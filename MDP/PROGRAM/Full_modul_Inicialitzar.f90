@@ -50,7 +50,7 @@ contains
         !DO j=1,n_particles-1
         !taskid= identificador del processador
             IF (taskid.lt.n_working) THEN
-                DO i=simple_matrix(taskid,1),simple_matrix(taskid,2)
+                DO i=simple_matrix(taskid,1) , simple_matrix(taskid,2) - 1
                     vi=2*RAND()-1
                     v(j,i)=vi
                     vtot=vtot+vi
