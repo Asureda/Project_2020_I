@@ -1,6 +1,7 @@
 module Inicialitzar
 
 use READ_DATA
+use matrix
 
 IMPLICIT NONE
 
@@ -13,19 +14,26 @@ contains
     n=1
     !print*,n
     !Definim aquesta configuració en les tres dimensions de l'espai
-    DO i=0,M-1
-        DO j=0,M-1
-            DO k=0,M-1
-                !print*,size(positions)
-                r(n,:)=a*(/i,j,k/)
-                !print*,positions(n,:)
-                r(n+1,:)=r(n,:)+a*(/0.5,0.5,0.0/)
-                r(n+2,:)=r(n,:)+a*(/0.5,0.0,0.5/)
-                r(n+3,:)=r(n,:)+a*(/0.0,0.5,0.5/)
-                n=n+4
-            END DO
-        END DO
-    END DO
+    !DO i=0,M-1
+        !DO j=0,M-1
+            !DO k=0,M-1
+            !taskid= identificador del processador
+                IF (taskid.lt.n_working) THEN
+                    DO i=simple_matrix(taskid,1),simple_matrix(taskid,2)
+                         DO i=simple_matrix(taskid,3),simple_matrix(taskid,4)
+                             DO i=simple_matrix(taskid,5),simple_matrix(taskid,6)
+                                !print*,size(positions)
+                                r(n,:)=a*(/i,j,k/)
+                                !print*,positions(n,:)
+                                r(n+1,:)=r(n,:)+a*(/0.5,0.5,0.0/)
+                                r(n+2,:)=r(n,:)+a*(/0.5,0.0,0.5/)
+                                r(n+3,:)=r(n,:)+a*(/0.0,0.5,0.5/)
+                                n=n+4
+                            END DO
+                        END DO
+                    END DO
+                END IF
+                MPI_BARRIER(comm ,  ierror)
     PRINT*, 'particles positioned', n-1, 'of a total imput', n_particles
     RETURN
     end subroutine FCC_Initialize
@@ -39,13 +47,19 @@ contains
     CALL SRAND(seed)
     DO i=1,3
         vtot=0
-        DO j=1,n_particles-1
-            vi=2*RAND()-1
-            v(j,i)=vi
-            vtot=vtot+vi
-        END DO
+        !DO j=1,n_particles-1
+        !taskid= identificador del processador
+            IF (taskid.lt.n_working) THEN
+                DO i=simple_matrix(taskid,1),simple_matrix(taskid,2)
+                    vi=2*RAND()-1
+                    v(j,i)=vi
+                    vtot=vtot+vi
+                END DO
+            END IF
+            MPI_BARRIER(comm, ierror)
         v(n_particles,i)=-vtot
     END DO
+
     CALL VELO_RESCALING_MOD(v,T)
     RETURN
     end subroutine Uniform_velocity
