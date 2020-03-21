@@ -14,16 +14,24 @@ contains
     REAL*8, DIMENSION(:,:) :: v
     nu=0.1/h
     sigma=sqrt(temp)
-    DO i=1,n_particles
-        IF(RAND().lt.nu*h)THEN
+    !DO i=1,n_particles
+        !IF(RAND().lt.nu*h)THEN
         !Iniciem aquest bucle per tal de fer una transformació de Box - Muller i obtenir una distribució normal de les velocitats.
-            n1=RAND();n2=RAND()
-            n3=RAND();n4=RAND()
-            n5=RAND();n6=RAND()
-            v(n_particles,:)=(/sigma*sqrt(-2d0*log10(n1))*cos(2d0*3.1415*n2),sigma*sqrt(-2d0*log10(n1))*sin(2d0*3.1415*n2),&
+        !taskid= identificador del processador
+        IF (taskid.lt.n_working) THEN
+            DO i=simple_matrix(taskid,1),simple_matrix(taskid,2)
+                n1=RAND()
+                n2=RAND()
+                n3=RAND()
+                n4=RAND()
+                n5=RAND()
+                n6=RAND()
+                v(n_particles,:)=(/sigma*sqrt(-2d0*log10(n1))*cos(2d0*3.1415*n2),sigma*sqrt(-2d0*log10(n1))*sin(2d0*3.1415*n2),&
                 &sigma*sqrt(-2d0*log10(n3))*cos(2d0*3.1415*n4)/)
+            END DO
         END IF
-    END DO
+        MPI_BARRIER(comm, ierror)
+        
     RETURN
     end subroutine Andersen
 
