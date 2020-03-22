@@ -7,6 +7,7 @@ MODULE Verlet_Algorithm
 use READ_DATA
 use Interaction_Cutoff_Modul
 use PBC
+use matrix
 implicit none
 contains
 SUBROUTINE VELO_VERLET(r,v,F)
@@ -35,12 +36,16 @@ SUBROUTINE VELO_VERLET(r,v,F)
 
     CALL INTERACTION_CUTOFF(r,F,cutoff)
     kinetic=0d0
-    DO i=1,n_particles
-        v(i,:)=v0(i,:)+5d-1*(F(i,:)+F0(i,:))*h
-        !v(i,:)=v(i,:)+5d-1*F(i,:)*h
-        kinetic=kinetic+5d-1*(v(i,1)**2d0+v(i,2)**2d0+v(i,3)**2d0)
-    END DO
-    !print*,'out verlet'
-    RETURN
+    IF (taskid.lt.n_working) THEN
+        DO i=simple_matrix(taskid,1),simple_matrix(taskid,2)
+            v(i,:)=v0(i,:)+5d-1*(F(i,:)+F0(i,:))*h
+            !v(i,:)=v(i,:)+5d-1*F(i,:)*h
+            kinetic=kinetic+5d-1*(v(i,1)**2d0+v(i,2)**2d0+v(i,3)**2d0)
+        END DO
+        !print*,'out verlet'
+        RETURN
+    END IF
+    MPI_BARRIER(comm, ierror)
+
 END SUBROUTINE
 END MODULE Verlet_Algorithm
