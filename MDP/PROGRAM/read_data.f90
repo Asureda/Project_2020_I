@@ -1,5 +1,18 @@
 MODULE READ_DATA
+
+    include 'mpif.h'
+
     IMPLICIT NONE
+
+    !DEFINI VARIABLES MPI I NECESSARIES PER LA PARAL.LELITZACIÓ
+    integer comm, taskid, numproc, ierror, partner
+    integer MASTER,reslen
+    integer message
+    integer stat(MPI_STATUS_SIZE)
+    character(32) hostname
+
+    integer, dimension(:,:), allocatable :: index_matrix, double_matrix
+
     ! Variables del fitxer parameters.dat
     INTEGER :: n_particles
     REAL*8 :: density,t_b,h,sigma,epsilon,mass,T_ini, T_therm, dx_radial
@@ -18,7 +31,6 @@ MODULE READ_DATA
     REAL*8 :: L,a,T_a,kinetic,potential,pressure
     !LOGICAL :: is_thermostat
     CONTAINS
-    
     ! Subrutina per definir variables globals les quals s'usaran en els diferents moduls
     SUBROUTINE READ_ALL_DATA()
         IMPLICIT NONE
@@ -57,7 +69,7 @@ MODULE READ_DATA
         READ(13,*)n_avog
         CLOSE(13)
     END SUBROUTINE
-    
+
     ! Funcio que calcula altres variables globals les quals no es llegeixen de cap fitxer
     SUBROUTINE OTHER_GLOBAL_VARS()
         IMPLICIT NONE
@@ -70,7 +82,7 @@ MODULE READ_DATA
         potential=0d0
         pressure=0d0
     END SUBROUTINE
-    
+
     ! Funcio per calcular l'energia cinetica
     FUNCTION KINETIC_ENERGY(v)
         IMPLICIT NONE
