@@ -1,32 +1,85 @@
 #Execute file
-echo "Deleting Data files from PROGRAM"
-rm PROGRAM/*.dat
-echo "Copy files from INPUT to PROGRAM"
-cp INPUT/*.dat PROGRAM/
-echo "Inside /PROGRAM"
+#Getting the temporal file name
+tmp_folder=$(date +'%d_%m_%Y_%H_%M_%S')
+
+# Creating the tmp file in PROGRM
+
+mkdir PROGRAM/$tmp_folder
+
+# Copy input parametters to tmp file
+
+cp INPUT/*.dat PRORGAM/$tmp_folder/
+
+# Enter in PROGRAM folder
+
 cd PROGRAM/
-echo "Executing MakeFile"
+
+# Execute Makefile to get the last version
+
 make
-echo "Make done"
-#. Deleting object files"
-#make clean_exe
-echo "Executing program"
-./main
-echo "From bash. Main program ended"
-echo "Executing Plot scripts"
-gnuplot red.gnu
-gnuplot real.gnu
-gnuplot gr.gnu
-echo "Getting out from PROGRAM/"
+
+# Copy the programs and scripts to the tmp folder
+# The thing we need start with "r_*"
+
+cp r_* $tmp_folder/
+
+#Enter in tmp folder
+
+cd $tmp_folder/
+
+#Execute the progrm
+
+./r_main
+
+# After the program finalizes, we go back
+
+rm r_*
+
 cd ..
-echo "Moving files from PROGRAM to OUTPUT"
-mv PROGRAM/thermodynamics_reduced.dat OUTPUT/thermodynamics_reduced.dat
-mv PROGRAM/thermodynamics_real.dat OUTPUT/thermodynamics_real.dat
-mv PROGRAM/distrib_funct.dat OUTPUT/distrib_funct.dat
-mv PROGRAM/positions.xyz OUTPUT/positions.xyz
-echo "Moving graphs"
-mv PROGRAM/*.png OUTPUT/
-echo "Deleting all data files from PROGRAM"
-rm PROGRAM/*.dat
-echo "From bash. End of script"
+cd ..
+
+# We crate the output folder in OUTPUT and copy results
+
+cp PROGRAM/$tmp_folder/*.dat OUTPUT/$tmp_folder/
+
+#Delete the tmp folder from PROGRAM
+
+# cd PROGRAM/
+# rm -r $tmp_folder/
+# cd ..
+
+
+# END     ##################################################
+
+
+# echo "Deleting Data files from PROGRAM"
+# rm PROGRAM/*.dat
+# echo "Copy files from INPUT to PROGRAM"
+# cp INPUT/*.dat PROGRAM/
+# echo "Inside /PROGRAM"
+# cd PROGRAM/
+# echo "Executing MakeFile"
+# make
+# echo "Make done"
+# #. Deleting object files"
+# #make clean_exe
+# echo "Executing program"
+# ./main
+# echo "From bash. Main program ended"
+# echo "Executing Plot scripts"
+# gnuplot red.gnu
+# gnuplot real.gnu
+# gnuplot gr.gnu
+# echo "Getting out from PROGRAM/"
+# cd ..
+# echo "Moving files from PROGRAM to OUTPUT"
+# mv PROGRAM/thermodynamics_reduced.dat OUTPUT/thermodynamics_reduced.dat
+# mv PROGRAM/thermodynamics_real.dat OUTPUT/thermodynamics_real.dat
+# mv PROGRAM/distrib_funct.dat OUTPUT/distrib_funct.dat
+# mv PROGRAM/positions.xyz OUTPUT/positions.xyz
+# echo "Moving graphs"
+# mv PROGRAM/*.png OUTPUT/
+# echo "Deleting all data files from PROGRAM"
+# rm PROGRAM/*.dat
+# echo "From bash. End of script"
 
