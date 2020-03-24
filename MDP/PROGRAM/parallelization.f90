@@ -12,38 +12,63 @@ module parallel_routines
         index_matrix=0
 
         if(n_particles>numproc)then
+          nworking_simple=numproc
           DO i=1,numproc
             index_matrix(i,1)=a*(i-1)+1
             index_matrix(i,2)=i*a
           ENDDO
-          if (mod(numproc,n_particles)/=0)then
-            index_matrix(numproc)=n_particles-numproc*a
-          endif
+          index_matrix(numproc)=n_particles
         else
+          nworking_simple=n_particles
           DO i=1,n_particles
             index_matrix(i,1)=i
-            index_matrix(i,2)=i+1
+            index_matrix(i,2)=i
           ENDDO
         endif
 
     END SUBROUTINE
 
-    SUBROUTINE doble_loop_matrix()
+    SUBROUTINE double_loop_matrix()
         IMPLICIT NONE
-        integer :: i,j, aa, ites
+        integer :: i,j, aa, ites, suma
         real*8 :: fact
 
         ites=int(FACT(numproc)/FACT(numproc-2)/2)
         aa=INT(REAL(ites)/REAL(numproc))
         allocate(double_matrix(numproc,4))
-        DO i=1,n_particules
-          DO j=i+1,n_particules
-            double_matrix(i,1)=
-            double_matrix(i,2)=
-            double_matrix(i,3)=
-            double_matrix(i,4)=
+        if(ites>numproc)then
+          suma=0
+          DO i=1,n_particules
+            DO j=i+1,n_particules
+              suma=suma+1
+              if(mod(suma,aa)==0)then
+                double_matrix(i,1)=i
+                double_matrix(i,3)=j
+                if(j==n_particles)then
+                  double_matrix(i,2)=i+1
+                  double_matrix(i,4)=i+2
+                else
+                  double_matrix(i,2)=i
+                  double_matrix(i,4)=j+1
+                endif
+              endif
+            ENDDO
           ENDDO
-        ENDDO
+          double_matrix(numproc,2)=n_particles
+          double_matrix(numproc,4)=n_particles
+        else
+          suma=0
+          DO i=1,n_particules
+            DO j=i+1,n_particules
+              double_matrix(i,1)=i
+              double_matrix(i,2)=i
+              double_matrix(i,3)=j
+              double_matrix(i,4)=j
+            ENDDO
+          ENDDO
+          double_matrix(numproc,2)=n_particles
+          double_matrix(numproc,4)=n_particles
+        endif
     END SUBROUTINE
 
     real*8 function FACT(n)
