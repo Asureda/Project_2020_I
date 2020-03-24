@@ -1,8 +1,8 @@
 MODULE READ_DATA
 
-    include 'mpif.h'
+    IMPLICIT NONE 
 
-    IMPLICIT NONE
+    include 'mpif.h'
 
     !DEFINI VARIABLES MPI I NECESSARIES PER LA PARAL.LELITZACIÓ
     integer comm, taskid, numproc, ierror, partner
