@@ -2,7 +2,7 @@
 
 
 # Compilador
-F90=gfortran
+F90=mpifort
 
 # Main program
 TARGET=main
@@ -28,12 +28,12 @@ FLAGS=-Wall  -fbounds-check
 # Compilacio del main program
 $(TARGET) : read_data.o PBC.o Full_Modul_Reescalar.o Full_modul_Inicialitzar.o Full_Modul_Andersen.o Full_Modul_Distrib_Radial.o L_J.o vel_initial.o energy.o main_vars.o verlet.o $(TARGET).o 
 	@echo "From MAKEFILE. Compiling main program"
-	$(F90) $(OPT) $(FLAGS) -o $(TARGET) $(TARGET).o energy.o PBC.o verlet.o vel_initial.o Full_Modul_Andersen.o Full_modul_Inicialitzar.o Full_Modul_Reescalar.o Full_Modul_Distrib_Radial.o L_J.o read_data.o main_vars.o
+	$(F90) -o $(TARGET) $(TARGET).o energy.o PBC.o verlet.o vel_initial.o Full_Modul_Andersen.o Full_modul_Inicialitzar.o Full_Modul_Reescalar.o Full_Modul_Distrib_Radial.o L_J.o read_data.o main_vars.o
 
 # Tots els fitxers amb extensio .f90 son compilats a objectes .o
 %.o : %.f90
 	@echo "From MAKEFILE. Compiling all modules"
-	$(F90) $(OPT) $(FLAGS) -c $<
+	$(F90) -c $<
 
 
 ## help: instruccions sobre l'us d'aquest Makefile
