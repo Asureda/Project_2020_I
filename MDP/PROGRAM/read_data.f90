@@ -9,6 +9,7 @@ MODULE READ_DATA
     integer MASTER,reslen
     integer message
     integer stat(MPI_STATUS_SIZE)
+    integer nworking_simple, nworking_double
     character(32) hostname
 
     integer, dimension(:,:), allocatable :: index_matrix, double_matrix

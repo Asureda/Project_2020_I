@@ -8,27 +8,39 @@ PROGRAM SEQUENTIAL_MD
   use Andersen_modul
   use Distribucio_Radial
   use Reescala_velocitats
+  use parallel_routines
 
   IMPLICIT NONE
-  INTEGER k
+  INTEGER k, master
 
   call MPI_INIT(ierror)
   call MPI_COMM_RANK(MPI_COMM_WORLD,taskid,ierror)
   call MPI_COMM_SIZE(MPI_COMM_WORLD,numproc,ierror)
 
-  call srand(seed)
-  !LLEGIM EL FITXER INPUT AMB LES SEGÜENTS DADES:
-  !PARAMETRES DE DENSITAT, MASSA, TEMPERATURA DE REFERÈNCIA, TEMPERATURA DEL BANYS ETC.
-  call read_all_data()
-  !CALCULEM ELS PARÀMETRES GLOBALS DEL LATTICE: NÚMERO DE PARTÍCULES, LONGITUD DE LA CAIXA,
-  !DISTANCIA ENTRE PARTICULES ETC.
-  call other_global_vars()
+  master=0
+  if(taskid==master)then
+    call srand(seed)
+    !LLEGIM EL FITXER INPUT AMB LES SEGÜENTS DADES:
+    !PARAMETRES DE DENSITAT, MASSA, TEMPERATURA DE REFERÈNCIA, TEMPERATURA DEL BANYS ETC.
+    call read_all_data()
+    !CALCULEM ELS PARÀMETRES GLOBALS DEL LATTICE: NÚMERO DE PARTÍCULES, LONGITUD DE LA CAIXA,
+    !DISTANCIA ENTRE PARTICULES ETC.
+    call other_global_vars()
+    !PARALLELIZATION MPI SUBROUTINES IN ORDER TO DISTRIBUTE THE PARTICLES AMONG THE PROCESSORS
+    call simple_loop_matrix()
+    DO k=1,numproc
+      print*,index_matrix(k,:)
+    ENDDO
+    call double_loop_matrix()
+    DO k=1,numproc
+      print*,double_matrix(k,:)
+    ENDDO
+  endif
+  stop
+
   !INICITALITZEM LES VARIABLES D'ESTAT EN UNITATS REDUÏDES
   call INITIALIZE_VARS()
   !DEFINIM LA CONFIGURACIÓ INICIAL DE LES PARTICULES COM UNA XARXA FCC
-!
-
-!
   call FCC_Initialize(r)
   !LI DONEM UNA VELOCITAT INICIAL A LES PARTICULES (VELOCITATS INICIALS RANDOM)
   call Uniform_velocity(v,T_ini)
