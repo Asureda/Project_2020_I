@@ -52,7 +52,7 @@ contains
                 END DO
             END DO
         END IF
-        !MPI_BARRIER(comm , ierror)
+        MPI_REDUCE(vec,vec,n_radial,MPI_INTEGER,MPI_SUM,master,MPI_COMM_WORLD,ierror)
 
     end subroutine RAD_DIST_INTER
 
