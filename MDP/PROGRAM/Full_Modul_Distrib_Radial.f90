@@ -17,10 +17,10 @@ contains
     !DO i=1,n_particles
         !DO j=1,n_particles
         !taskid= identificador del processador
-        IF (paral_double.eqv..TRUE.) THEN
-        IF (taskid.le.nworking_double) THEN
-            DO i=double_matrix(taskid,1),double_matrix(taskid,2)
-                DO j=double_matrix(taskid,3),double_matrix(taskid,4)
+        !IF (paral_double.eqv..TRUE.) THEN
+        IF (taskid.le.nworking) THEN
+            DO i=simple_matrix(taskid,1),simple_matrix(taskid,2)
+                 DO j = i+1, n_particles
                     IF (i.ne.j) THEN
                         !Calculem el diferencial en l'espai de les tres dimensions sobre les que treballem
                         dx=PBC1(r(j,1)-r(i,1),L)
