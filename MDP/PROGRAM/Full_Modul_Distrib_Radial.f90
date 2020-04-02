@@ -18,8 +18,8 @@ contains
         !DO j=1,n_particles
         !taskid= identificador del processador
         !IF (paral_double.eqv..TRUE.) THEN
-        IF (taskid.le.nworking) THEN
-            DO i=simple_matrix(taskid,1),simple_matrix(taskid,2)
+        IF (taskid.le.nworking_simple) THEN
+            DO i=index_matrix(taskid,1),index_matrix(taskid,2)
                  DO j = i+1, n_particles
                     IF (i.ne.j) THEN
                         !Calculem el diferencial en l'espai de les tres dimensions sobre les que treballem
