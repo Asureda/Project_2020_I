@@ -1,12 +1,12 @@
 MODULE READ_DATA
 
-    include 'mpif.h'
+    
 
     IMPLICIT NONE
-
+    include 'mpif.h'
     !DEFINI VARIABLES MPI I NECESSARIES PER LA PARAL.LELITZACIÓ
-    integer comm, taskid, numproc, ierror, partner
-    integer MASTER,reslen
+    integer comm, taskid, numproc, ierror, partner,request
+    integer reslen
     integer message
     integer stat(MPI_STATUS_SIZE)
     integer nworking_simple, nworking_double
@@ -22,7 +22,7 @@ MODULE READ_DATA
     ! Variables del fitxer config.dat
     INTEGER :: n_meas,n_meas_gr,n_meas_time_ev,n_melting
     REAL*8 :: T_therm_prov
-    LOGICAL :: is_print_thermo,is_compute_gr,is_time_evol
+    LOGICAL :: is_print_thermo,is_compute_gr,is_time_evol,paral_simple,paral_double
 
     ! Variables del fitxer constants.dat
     REAL*8 :: k_b,n_avog
@@ -63,6 +63,8 @@ MODULE READ_DATA
         READ(12,*)n_meas_gr
         READ(12,*)is_time_evol
         READ(12,*)n_meas_time_ev
+        READ(12,*)paral_simple
+        READ(12,*)paral_double
         CLOSE(12)
 
         OPEN(13,FILE='constants.dat',status='OLD')

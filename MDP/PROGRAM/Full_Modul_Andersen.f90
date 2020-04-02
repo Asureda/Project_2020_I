@@ -1,7 +1,7 @@
 module Andersen_modul
 
 use READ_DATA
-use matrix
+use parallel_routines
 
 IMPLICIT NONE
 
@@ -11,7 +11,7 @@ contains
     !Aquesta subrutina serveix per calcular les noves velocitats un cop apliquem el termostat d'Andersen 
     IMPLICIT NONE
     INTEGER i
-    REAL*8 temp,nu,n1,n2,n3,n4,n5,n6
+    REAL*8 temp,nu,n1,n2,n3,n4,n5,n6,RAND
     REAL*8, DIMENSION(:,:) :: v
     nu=0.1/h
     sigma=sqrt(temp)
@@ -19,19 +19,25 @@ contains
         !IF(RAND().lt.nu*h)THEN
         !Iniciem aquest bucle per tal de fer una transformació de Box - Muller i obtenir una distribució normal de les velocitats.
         !taskid= identificador del processador
-        IF (taskid.lt.n_working) THEN
-            DO i=simple_matrix(taskid,1),simple_matrix(taskid,2)
-                n1=RAND()
-                n2=RAND()
-                n3=RAND()
-                n4=RAND()
-                n5=RAND()
-                n6=RAND()
+        IF (taskid.le.nworking_simple) THEN
+            DO i=index_matrix(taskid,1),index_matrix(taskid,2)
+                CALL RANDOM_SEED()
+                CALL RANDOM_NUMBER(n1)
+                CALL RANDOM_SEED()
+                CALL RANDOM_NUMBER(n2)
+                CALL RANDOM_SEED()
+                CALL RANDOM_NUMBER(n3)
+                CALL RANDOM_SEED()
+                CALL RANDOM_NUMBER(n4)
+                CALL RANDOM_SEED()
+                CALL RANDOM_NUMBER(n5)
+                CALL RANDOM_SEED()
+                CALL RANDOM_NUMBER(n6)
                 v(n_particles,:)=(/sigma*sqrt(-2d0*log10(n1))*cos(2d0*3.1415*n2),sigma*sqrt(-2d0*log10(n1))*sin(2d0*3.1415*n2),&
                 &sigma*sqrt(-2d0*log10(n3))*cos(2d0*3.1415*n4)/)
             END DO
         END IF
-        MPI_BARRIER(comm, ierror)
+        call MPI_BARRIER(MPI_COMM_WORLD,ierror)
         
     RETURN
     end subroutine Andersen

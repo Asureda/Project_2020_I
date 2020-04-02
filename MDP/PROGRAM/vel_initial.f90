@@ -6,7 +6,7 @@ implicit none
 contains
 SUBROUTINE UNIFORM_VELO(v,T)
     INTEGER :: i,j,seed
-    REAL*8 :: v(:,:),vi,vtot,T    
+    REAL*8 :: v(:,:),vi,vtot,T, RAND  
     seed=13
     CALL SRAND(seed)
     

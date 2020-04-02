@@ -1,4 +1,5 @@
 PROGRAM SEQUENTIAL_MD
+  !use MPI
   use READ_DATA
   use ALLOCATE_VARS
   use Inicialitzar
@@ -11,14 +12,17 @@ PROGRAM SEQUENTIAL_MD
   use parallel_routines
 
   IMPLICIT NONE
-  INTEGER k, master
+  INTEGER k, master_task
 
   call MPI_INIT(ierror)
   call MPI_COMM_RANK(MPI_COMM_WORLD,taskid,ierror)
   call MPI_COMM_SIZE(MPI_COMM_WORLD,numproc,ierror)
+  taskid=taskid+1
+  print*,taskid
+  master_task=1
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 
-  master=0
-  if(taskid==master)then
+  if(taskid.eq.master_task)then
     call srand(seed)
     !LLEGIM EL FITXER INPUT AMB LES SEGÜENTS DADES:
     !PARAMETRES DE DENSITAT, MASSA, TEMPERATURA DE REFERÈNCIA, TEMPERATURA DEL BANYS ETC.
@@ -35,9 +39,7 @@ PROGRAM SEQUENTIAL_MD
     DO k=1,numproc
       print*,double_matrix(k,:)
     ENDDO
-  endif
-  stop
-
+  
   !INICITALITZEM LES VARIABLES D'ESTAT EN UNITATS REDUÏDES
   call INITIALIZE_VARS()
   !DEFINIM LA CONFIGURACIÓ INICIAL DE LES PARTICULES COM UNA XARXA FCC
@@ -52,14 +54,39 @@ PROGRAM SEQUENTIAL_MD
   !APLIQUEM EL TERMOSTAT DE ANDERSEN TANTS COPS COM SIGUIN NECESSARIS
   !cutoff_aux=0.99*L*5d-1
   !CALL INTERACTION_CUTOFF(r,F,cutoff_aux)
-  DO i=1,n_melting
+  print*,'master of the initialization',taskid
+  endif
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+  IF(taskid.eq.master_task) THEN
+  DO k=1,numproc-1
+    print*,'bucle'
+    CALL MPI_SEND(nworking_simple,1,MPI_INTEGER,k,nworking_simple,MPI_COMM_WORLD,ierror)
+  END DO
+  END IF
+  !stop
+  !call MPI_BARRIER(comm,ierror)
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+  print*,'beafor melting',taskid,nworking_simple,nworking_double
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+  !-------------------------------------------
+  print*,'before finalize'
+  CALL MPI_FINALIZE(ierror)
+  print*,'after finalize'
+  stop
+  !-------------------------------------------
+  DO i=1,3!n_melting
+    print*,i,'task',taskid
+    call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     call velo_verlet(r,v,F) !EN UNA REGIÓ LxL AMB UNES CONDICIONS DE CONTORN PERIODIQUES
                             ! EN FUNCIO DE LES FORCES D'INTERACCIÓ S'ACTUALITZEN LES VELOCITATS
                             ! I LES POSICIONS DE LES PARTÍCULES
+    print*,'mid bucle malting'
     call andersen(v,T_therm_prov) !AMB EL TERMOSTAT RECALCULEM LES VELOCITATS ARA EN FUNCIO
                                   ! DE LES TEMPERATURES
   end do
-  print*,'FINAL MELTING'
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+  print*,'FINAL MELTING',taskid
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
   !AMB EL SÒLID FOS I LES PARTICULES MOVENT-SE COM UN FLUID LES VELOCITATS ES REESCALEN CALCULANT
   !L'ENERGIA CINÈTICA DEGUDA A LA TEMPERATURA DE LES PARTÍCULES
   !COPIEM ELS PRIMERS RESULTATS DE LES PARTICULES COM A FLUID, VELOCITAT, POSICIONS, TEMPERATURES I
@@ -78,8 +105,14 @@ PROGRAM SEQUENTIAL_MD
   !CALL INTERACTION_CUTOFF(r,F,cutoff_aux)
   pressure=(density*temp_instant+pressure/(3d0*L**3d0))
   print*,'pres',press_re,pressure,pressure*press_re
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+  print*,taskid
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
   DO i=1,n_verlet
+    IF(taskid.eq.master_task) THEN
     t=t_a+i*h
+    END IF
+    CALL MPI_BARRIER(comm,ierror)
     call VELO_VERLET(r,v,F)
     if(is_thermostat.eqv..true.)THEN
       call andersen(v,T_therm)
@@ -87,32 +120,37 @@ PROGRAM SEQUENTIAL_MD
   !PER OBTENIR LA DISTRIBUCIÓ RADIAL DE LES PARTÍCULES A CADA TIME STEP
   !DE LES PARTÍCULES DE LA REGIÓ DE LA CAIXA LI APLIQUEM LA FUNCIÍ G EN FUNCIÓ
   !DEL RADI
-    if((mod(i,n_meas).eq.0).and.(is_print_thermo.eqv..true.))then
-      temp_instant=2d0*kinetic/(3d0*n_particles)
-      pressure=(density*temp_instant+pressure/(3d0*L**3d0))
-      write(51,*)t,kinetic,potential,(kinetic+potential),temp_instant,pressure
-      write(52,*)t*time_re,kinetic*energy_re,potential*energy_re,(kinetic+potential)*energy_re,temp_instant*&
-                                                                                    &temp_re,pressure*press_re
-    endif
-    if((mod(i,n_meas_gr).eq.0).and.(is_compute_gr.eqv..true.))then
-      call RAD_DIST_INTER(r,g_r) !càlcul g(r) a cada pas
-      n_gr_meas=n_gr_meas+1
-    endif
-    IF(is_time_evol.eqv..TRUE.)THEN
-      WRITE(54,*)n_particles
-      WRITE(54,*)
-      DO k=1,n_particles
-        WRITE(54,*)'X',r(k,:)
-      END DO
+    IF (taskid.eq.master_task) THEN
+      if((mod(i,n_meas).eq.0).and.(is_print_thermo.eqv..true.))then
+        temp_instant=2d0*kinetic/(3d0*n_particles)
+        pressure=(density*temp_instant+pressure/(3d0*L**3d0))
+        write(51,*)t,kinetic,potential,(kinetic+potential),temp_instant,pressure
+        write(52,*)t*time_re,kinetic*energy_re,potential*energy_re,(kinetic+potential)*energy_re,temp_instant*&
+                                                                                      &temp_re,pressure*press_re
+      endif
+      if((mod(i,n_meas_gr).eq.0).and.(is_compute_gr.eqv..true.))then
+        call RAD_DIST_INTER(r,g_r) !càlcul g(r) a cada pas
+        n_gr_meas=n_gr_meas+1
+      endif
+      IF(is_time_evol.eqv..TRUE.)THEN
+        WRITE(54,*)n_particles
+        WRITE(54,*)
+        DO k=1,n_particles
+          WRITE(54,*)'X',r(k,:)
+        END DO
+      END IF
     END IF
   enddo
-  if((is_compute_gr.eqv..true.))then
-    call RAD_DIST_INTER(r,g_r)
-    n_gr_meas=n_gr_meas+1
-    call RAD_DIST_FINAL(g_r,n_gr_meas) !càlcul g(r) com a cúmul
-    do k=1,n_radial
-      write(53,*)dx_radial*k,g_r(k)
-    enddo
-  endif
-  print*,'PROGRAM END'
+  IF (taskid.eq.master_task)then
+    if((is_compute_gr.eqv..true.))then
+      call RAD_DIST_INTER(r,g_r)
+      n_gr_meas=n_gr_meas+1
+      call RAD_DIST_FINAL(g_r,n_gr_meas) !càlcul g(r) com a cúmul
+      do k=1,n_radial
+        write(53,*)dx_radial*k,g_r(k)
+      enddo
+    endif
+    print*,'PROGRAM END'
+  END IF
+  CALL MPI_FINALIZE(ierror)
 END PROGRAM SEQUENTIAL_MD
