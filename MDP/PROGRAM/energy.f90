@@ -29,7 +29,7 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
                         dy=PBC1(r(i,2)-r(j,2),L)
                         dz=PBC1(r(i,3)-r(j,3),L)
                         d=(dx**2d0+dy**2d0+dz**2d0)**0.5
-                                
+
                         CALL L_J(d,ff,pot,cutoff)
                         F(i,1)=F(i,1)+ff*dx
                         F(i,2)=F(i,2)+ff*dy
@@ -54,18 +54,20 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
                                 &(index_matrix(taskid,2)-index_matrix(taskid,1)+1), &
                                 &MPI_DOUBLE_PRECISION,&
                                 & f(:,k),num_send, desplac,&
-                                & MPI_DOUBLE_PRECISION, MPI_COMM_WORLD,ierror )
+                                & MPI_DOUBLE_PRECISION, MPI_COMM_WORLD,ierror ) ! OPCIONAL crec, amb posicions es suficient
         END DO
         print*,'after algather',taskid,'force', f(1,:)
+        call MPI_REDUCE( potential, potential,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
+        call MPI_REDUCE(pressure,pressure,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
     ELSE if(paral_double.eqv..false.)then
-        if (taskid.eq.1) then 
+        if (taskid.eq.1) then
             DO i=1,n_particles
               DO j=i+1,n_particles
                 dx=PBC1(r(i,1)-r(j,1),L)
                 dy=PBC1(r(i,2)-r(j,2),L)
                 dz=PBC1(r(i,3)-r(j,3),L)
                 d=(dx**2d0+dy**2d0+dz**2d0)**0.5
-                        
+
                         CALL L_J(d,ff,pot,cutoff)
                         F(i,1)=F(i,1)+ff*dx
                         F(i,2)=F(i,2)+ff*dy
@@ -86,6 +88,7 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
         END DO
         print*,'after algather'
     END IF
+
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     !call MPI_REDUCE(pressure,pressure,1,MPI_DOUBLE_PRECISION,MPI_SUM,master,MPI_COMM_WORLD,ierror)
     !call MPI_REDUCE(potential,potential,1,MPI_DOUBLE_PRECISION,MPI_SUM,master,MPI_COMM_WORLD,ierror)
