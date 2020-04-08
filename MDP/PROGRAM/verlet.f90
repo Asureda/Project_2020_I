@@ -11,7 +11,7 @@ use parallel_routines
 implicit none
 contains
 SUBROUTINE VELO_VERLET(r,v,F)
-    INTEGER i
+    INTEGER i,k
     REAL*8 r(:,:),v(:,:),r0(n_particles,3),v0(n_particles,3),f0(n_particles,3)
     REAL*8 F(:,:),cutoff
     !REAL*8, DIMENSION(n_particles,3) :: tot_dis = 0
@@ -21,12 +21,12 @@ SUBROUTINE VELO_VERLET(r,v,F)
     v0=v
     f0=f
     CALL INTERACTION_CUTOFF(r,F0,cutoff)
+    call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 !####################################################################################
 !####################################################################################
 !CORRECT TILL HERE
 !####################################################################################
 !####################################################################################
-    stop
     !DO i=1,n_particles
         !v(i,:)=v(i,:)+5d-1*F(i,:)*h
     !END DO
@@ -45,10 +45,10 @@ SUBROUTINE VELO_VERLET(r,v,F)
     CALL MPI_ALLGATHERV(r(index_matrix(taskid,1):index_matrix(taskid,2),k),&
                         & (index_matrix(taskid,2)-index_matrix(taskid,1)+1),MPI_DOUBLE_PRECISION, &
                         & r(:,k),num_send,desplac,MPI_DOUBLE_PRECISION,MPI_COMM_WORLD,ierror)
-
     END DO
 
     CALL INTERACTION_CUTOFF(r,F,cutoff)
+    call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     kinetic=0d0
 
     IF (taskid.le.nworking_simple) THEN
@@ -60,6 +60,12 @@ SUBROUTINE VELO_VERLET(r,v,F)
         !print*,'out verlet'
         RETURN
     END IF
+    DO k=1,3
+    CALL MPI_ALLGATHERV(v(index_matrix(taskid,1):index_matrix(taskid,2),k),&
+                        & (index_matrix(taskid,2)-index_matrix(taskid,1)+1),MPI_DOUBLE_PRECISION, &
+                        & v(:,k),num_send,desplac,MPI_DOUBLE_PRECISION,MPI_COMM_WORLD,ierror)
+    END DO
+    call MPI_REDUCE(kinetic,kinetic,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 
 END SUBROUTINE

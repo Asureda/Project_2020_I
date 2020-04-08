@@ -42,7 +42,7 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
             END DO
         END DO
     END IF
-    MPI_BARRIER(comm, ierror)
+    !MPI_BARRIER(comm, ierror)
 END SUBROUTINE INTERACTION_CUTOFF
 
 END MODULE Interaction_Cutoff_Modul

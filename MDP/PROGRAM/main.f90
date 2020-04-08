@@ -78,28 +78,27 @@ PROGRAM SEQUENTIAL_MD
     call velo_verlet(r,v,F) !EN UNA REGIÓ LxL AMB UNES CONDICIONS DE CONTORN PERIODIQUES
                             ! EN FUNCIO DE LES FORCES D'INTERACCIÓ S'ACTUALITZEN LES VELOCITATS
                             ! I LES POSICIONS DE LES PARTÍCULES
-!####################################################################################
-!####################################################################################
-print*,'before finalize'
-CALL MPI_FINALIZE(ierror)
-print*,'after finalize'
-stop
-!####################################################################################
-!####################################################################################
-
-
-    call andersen(v,T_therm_prov) !AMB EL TERMOSTAT RECALCULEM LES VELOCITATS ARA EN FUNCIO
+    call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+    !call andersen(v,T_therm_prov) !AMB EL TERMOSTAT RECALCULEM LES VELOCITATS ARA EN FUNCIO
                                   ! DE LES TEMPERATURES
   end do
   call MPI_BARRIER(MPI_COMM_WORLD,ierror)
   print*,'FINAL MELTING',taskid
   call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+print*,'after verlet from proc',taskid,'positions',r(1,:),pressure,potential,kinetic  
   !AMB EL SÒLID FOS I LES PARTICULES MOVENT-SE COM UN FLUID LES VELOCITATS ES REESCALEN CALCULANT
   !L'ENERGIA CINÈTICA DEGUDA A LA TEMPERATURA DE LES PARTÍCULES
   !COPIEM ELS PRIMERS RESULTATS DE LES PARTICULES COM A FLUID, VELOCITAT, POSICIONS, TEMPERATURES I
   !PRESSIÓ, EN UNITATS REDUÏDES I NO REDUÏDES I LES POSICIONS DE LES PARTÍCULES
   !I LES ESCRIBIIM EN UN FITXER OUTPUT
-  call Velo_Rescaling(v,T_ini)
+  IF(taskid.eq.master_task)THEN
+    call Velo_Rescaling(v,T_ini)
+  END IF
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+  DO k=1,3
+        CALL MPI_BCAST(v(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
+  END DO
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
   open(51,file='thermodynamics_reduced.dat')
   open(52,file='thermodynamics_real.dat')
   open(53,file='distrib_funct.dat')
@@ -115,14 +114,14 @@ stop
   call MPI_BARRIER(MPI_COMM_WORLD,ierror)
   print*,taskid
   call MPI_BARRIER(MPI_COMM_WORLD,ierror)
-  DO i=1,n_verlet
+  DO i=1,20
     IF(taskid.eq.master_task) THEN
     t=t_a+i*h
     END IF
     CALL MPI_BARRIER(comm,ierror)
     call VELO_VERLET(r,v,F)
     if(is_thermostat.eqv..true.)THEN
-      call andersen(v,T_therm)
+      !call andersen(v,T_therm)
     end if
   !PER OBTENIR LA DISTRIBUCIÓ RADIAL DE LES PARTÍCULES A CADA TIME STEP
   !DE LES PARTÍCULES DE LA REGIÓ DE LA CAIXA LI APLIQUEM LA FUNCIÍ G EN FUNCIÓ
@@ -131,6 +130,10 @@ stop
       if((mod(i,n_meas).eq.0).and.(is_print_thermo.eqv..true.))then
         temp_instant=2d0*kinetic/(3d0*n_particles)
         pressure=(density*temp_instant+pressure/(3d0*L**3d0))
+        print*,'pressio BONA  de la SILVIA',pressure,temp_instant
+        print*,'energya BONA  de la SILVIA',kinetic,potential
+        print*,'forca BONA  de la SILVIA', F(1,:)
+        print*,'-------------------------------------------------------------'
         write(51,*)t,kinetic,potential,(kinetic+potential),temp_instant,pressure
         write(52,*)t*time_re,kinetic*energy_re,potential*energy_re,(kinetic+potential)*energy_re,temp_instant*&
                                                                                       &temp_re,pressure*press_re
@@ -148,6 +151,14 @@ stop
       END IF
     END IF
   enddo
+!####################################################################################
+!####################################################################################
+print*,'before finalize'
+CALL MPI_FINALIZE(ierror)
+print*,'after finalize'
+stop
+!####################################################################################
+!####################################################################################
   IF (taskid.eq.master_task)then
     if((is_compute_gr.eqv..true.))then
       call RAD_DIST_INTER(r,g_r)
