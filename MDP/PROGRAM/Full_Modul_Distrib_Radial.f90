@@ -35,22 +35,25 @@ contains
                     END DO
                 END DO
             END IF
+            CALL MPI_REDUCE(vec,vec,n_radial, MPI_INTEGER,MPI_SUM,0,MPI_COMM_WORLD,ierror)
         ELSE
-            DO i=1,n_particles
-                DO j=i+1,n_particles
-                    IF (i.ne.j) THEN
-                        !Calculem el diferencial en l'espai de les tres dimensions sobre les que treballem
-                        dx=PBC1(r(j,1)-r(i,1),L)
-                        dy=PBC1(r(j,2)-r(i,2),L)
-                        dz=PBC1(r(j,3)-r(i,3),L)
-                        dist=(dx**2d0+dy**2d0+dz**2d0)**0.5
-                        coef=int(0.5+dist/dx_radial)
-                        IF ((coef.gt.0).and.(coef.le.n_radial)) THEN
-                            vec(coef)=vec(coef)+2.0
+            IF (taskid.eq.1)THEN
+                DO i=1,n_particles
+                    DO j=i+1,n_particles
+                        IF (i.ne.j) THEN
+                            !Calculem el diferencial en l'espai de les tres dimensions sobre les que treballem
+                            dx=PBC1(r(j,1)-r(i,1),L)
+                            dy=PBC1(r(j,2)-r(i,2),L)
+                            dz=PBC1(r(j,3)-r(i,3),L)
+                            dist=(dx**2d0+dy**2d0+dz**2d0)**0.5
+                            coef=int(0.5+dist/dx_radial)
+                            IF ((coef.gt.0).and.(coef.le.n_radial)) THEN
+                                vec(coef)=vec(coef)+2.0
+                            END IF
                         END IF
-                    END IF
+                    END DO
                 END DO
-            END DO
+            END IF
         END IF
         !MPI_REDUCE(vec,vec,n_radial,MPI_INTEGER,MPI_SUM,master,MPI_COMM_WORLD,ierror)
 
