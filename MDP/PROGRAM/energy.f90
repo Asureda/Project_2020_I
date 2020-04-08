@@ -20,6 +20,7 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
     !print*,'hola-1'
     pressure=0.0
     !print*,'hola'
+    call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     IF (paral_double.eqv..TRUE.)THEN
         IF (taskid.le.nworking_simple) THEN
             DO i=index_matrix(taskid,1),index_matrix(taskid,2)
@@ -41,13 +42,19 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
                         !MUST DIVIDE BY TWO LATER !!!!
                         potential=potential+pot
                         pressure=pressure+(ff*dx**2d0+ff*dy**2d0+ff*dz**2d0)
+                        !print*,'lj1',pressure,ff,d,L
                     END IF
                 END DO
+                !print*,'lj2',pressure
             END DO
+
         END IF
+        !print*,'pressure',pressure
         !SINCE WE COMPUTE A SMALL PART OF THE FORCE MATRIX WE MUST
         !SEND EACH PART TO ALL OTHER PROCESSATORS
-        print*,'before algather from proc',taskid,'force', f(1,:)
+        !print*,'before algather from proc',taskid,'force', f(1,:)
+        potential=potential/2d0
+        pressure=pressure/2d0
         call MPI_BARRIER(MPI_COMM_WORLD,ierror)
         DO k=1,3
             CALL MPI_ALLGATHERV(f(index_matrix(taskid,1):index_matrix(taskid,2),k), &
@@ -56,9 +63,8 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
                                 & f(:,k),num_send, desplac,&
                                 & MPI_DOUBLE_PRECISION, MPI_COMM_WORLD,ierror ) ! OPCIONAL crec, amb posicions es suficient
         END DO
-        print*,'after algather',taskid,'force', f(1,:)
-        call MPI_REDUCE( potential, potential,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
-        call MPI_REDUCE(pressure,pressure,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
+        !print*,'after algather',taskid,'force', f(1,:)
+        
     ELSE if(paral_double.eqv..false.)then
         if (taskid.eq.1) then
             DO i=1,n_particles
@@ -82,12 +88,14 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
         end if
         !HERE WE COMPUTE THE FORCE, POTENTIAL AND PRESSURE IN ONE PROCESSATOR
         !WE MUST SEND THE FORCE TO ALL OTHER PROCESSATORS
-        print*,'before algather'
+        !print*,'before algather'
         DO k=1,3
             CALL MPI_BCAST(F(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
         END DO
-        print*,'after algather'
+        !print*,'after algather'
     END IF
+    call MPI_REDUCE(potential,potential,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
+    call MPI_REDUCE(pressure,pressure,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
 
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     !call MPI_REDUCE(pressure,pressure,1,MPI_DOUBLE_PRECISION,MPI_SUM,master,MPI_COMM_WORLD,ierror)

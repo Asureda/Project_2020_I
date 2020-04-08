@@ -10,7 +10,7 @@ contains
     subroutine Andersen(v,temp)
     !Aquesta subrutina serveix per calcular les noves velocitats un cop apliquem el termostat d'Andersen 
     IMPLICIT NONE
-    INTEGER i
+    INTEGER i,k
     REAL*8 temp,nu,n1,n2,n3,n4,n5,n6,RAND
     REAL*8, DIMENSION(:,:) :: v
     nu=0.1/h
@@ -32,16 +32,16 @@ contains
                 &sigma*sqrt(-2d0*log10(n3))*cos(2d0*3.1415*n4)/)
             END DO
         END IF
-        print*,'andersen before algather from proc',taskid,'force', f(1,:)
+        !print*,'andersen before algather from proc',taskid,'force', v(1,:)
         call MPI_BARRIER(MPI_COMM_WORLD,ierror)
         DO k=1,3
-            CALL MPI_ALLGATHERV(f(index_matrix(taskid,1):index_matrix(taskid,2),k), &
+            CALL MPI_ALLGATHERV(v(index_matrix(taskid,1):index_matrix(taskid,2),k), &
                                 &(index_matrix(taskid,2)-index_matrix(taskid,1)+1), &
                                 &MPI_DOUBLE_PRECISION,&
-                                & f(:,k),num_send, desplac,&
+                                & v(:,k),num_send, desplac,&
                                 & MPI_DOUBLE_PRECISION, MPI_COMM_WORLD,ierror )
         END DO
-        print*,'andersen after algather',taskid,'force', f(1,:)
+        !print*,'andersen after algather',taskid,'force', v(1,:)
         call MPI_BARRIER(MPI_COMM_WORLD,ierror)
         
     RETURN
