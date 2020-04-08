@@ -53,10 +53,10 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
             CALL MPI_ALLGATHERV(f(index_matrix(taskid,1):index_matrix(taskid,2),k), &
                                 &(index_matrix(taskid,2)-index_matrix(taskid,1)+1), &
                                 &MPI_DOUBLE_PRECISION,&
-                                & f(:,k),(index_matrix(taskid,2)-index_matrix(taskid,1)+1), 0,&
+                                & f(:,k),num_send, desplac,&
                                 & MPI_DOUBLE_PRECISION, MPI_COMM_WORLD,ierror )
         END DO
-        print*,'after algather'
+        print*,'after algather',taskid,'force', f(1,:)
     ELSE if(paral_double.eqv..false.)then
         if (taskid.eq.1) then 
             DO i=1,n_particles
