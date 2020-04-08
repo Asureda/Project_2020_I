@@ -20,6 +20,8 @@ SUBROUTINE VELO_VERLET(r,v,F)
     f0=f
     print*,'initial veloverlet'
     CALL INTERACTION_CUTOFF(r,F0,cutoff)
+    print*, 'before verlet stop',taskid
+    stop
     !DO i=1,n_particles
         !v(i,:)=v(i,:)+5d-1*F(i,:)*h
     !END DO
