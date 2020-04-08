@@ -1,5 +1,5 @@
 ! Modul de l'algoritme d'integració Verlet
-! Integració de les equacions de Newton mitjançant l'integració de Verlet 
+! Integració de les equacions de Newton mitjançant l'integració de Verlet
 ! El modul consta de dos parts, en primer lloc el càlcul de les velocitats i posicions a partir de les configuracions inicials
 ! En segon lloc calcular les noves forces a partir de les posicions anteriors i tot seguit fer el càlcul de les noves velocitats v(t+h) a partir de les
 ! noves forces.
@@ -14,6 +14,8 @@ SUBROUTINE VELO_VERLET(r,v,F)
     INTEGER i
     REAL*8 r(:,:),v(:,:),r0(n_particles,3),v0(n_particles,3),f0(n_particles,3)
     REAL*8 F(:,:),cutoff
+    !REAL*8, DIMENSION(n_particles,3) :: tot_dis = 0
+    !REAL*8, DIMENSION(n_verlet) :: disp_sq
     cutoff=0.99*L*5d-1
     r0=r
     v0=v
@@ -32,7 +34,6 @@ SUBROUTINE VELO_VERLET(r,v,F)
     IF (taskid.le.nworking_simple) THEN
         DO i=index_matrix(taskid,1),index_matrix(taskid,2)
             r(i,:)=r0(i,:)+v0(i,:)*h+5d-1*F0(i,:)*h*h
-            !r(i,:)=r(i,:)+v(i,:)*h+5d-1*F(i,:)*h*h
             r(i,1)=PBC2(r(i,1),L)
             r(i,2)=PBC2(r(i,2),L)
             r(i,3)=PBC2(r(i,3),L)
@@ -40,8 +41,16 @@ SUBROUTINE VELO_VERLET(r,v,F)
     END IF
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 
+    DO k=1,3
+    CALL MPI_ALLGATHERV(r(index_matrix(taskid,1):index_matrix(taskid,2),k),&
+                        & (index_matrix(taskid,2)-index_matrix(taskid,1)+1),MPI_DOUBLE_PRECISION, &
+                        & r(:,k),num_send,desplac,MPI_DOUBLE_PRECISION,MPI_COMM_WORLD,ierror)
+
+    END DO
+
     CALL INTERACTION_CUTOFF(r,F,cutoff)
     kinetic=0d0
+
     IF (taskid.le.nworking_simple) THEN
         DO i=index_matrix(taskid,1),index_matrix(taskid,2)
             v(i,:)=v0(i,:)+5d-1*(F(i,:)+F0(i,:))*h
