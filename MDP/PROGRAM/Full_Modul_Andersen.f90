@@ -23,20 +23,25 @@ contains
             DO i=index_matrix(taskid,1),index_matrix(taskid,2)
                 CALL RANDOM_SEED()
                 CALL RANDOM_NUMBER(n1)
-                CALL RANDOM_SEED()
                 CALL RANDOM_NUMBER(n2)
-                CALL RANDOM_SEED()
                 CALL RANDOM_NUMBER(n3)
-                CALL RANDOM_SEED()
                 CALL RANDOM_NUMBER(n4)
-                CALL RANDOM_SEED()
                 CALL RANDOM_NUMBER(n5)
-                CALL RANDOM_SEED()
                 CALL RANDOM_NUMBER(n6)
                 v(n_particles,:)=(/sigma*sqrt(-2d0*log10(n1))*cos(2d0*3.1415*n2),sigma*sqrt(-2d0*log10(n1))*sin(2d0*3.1415*n2),&
                 &sigma*sqrt(-2d0*log10(n3))*cos(2d0*3.1415*n4)/)
             END DO
         END IF
+        print*,'andersen before algather from proc',taskid,'force', f(1,:)
+        call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+        DO k=1,3
+            CALL MPI_ALLGATHERV(f(index_matrix(taskid,1):index_matrix(taskid,2),k), &
+                                &(index_matrix(taskid,2)-index_matrix(taskid,1)+1), &
+                                &MPI_DOUBLE_PRECISION,&
+                                & f(:,k),num_send, desplac,&
+                                & MPI_DOUBLE_PRECISION, MPI_COMM_WORLD,ierror )
+        END DO
+        print*,'andersen after algather',taskid,'force', f(1,:)
         call MPI_BARRIER(MPI_COMM_WORLD,ierror)
         
     RETURN
