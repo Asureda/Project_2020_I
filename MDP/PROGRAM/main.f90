@@ -1,5 +1,15 @@
 PROGRAM SEQUENTIAL_MD
   !use MPI
+  !########################################################################
+  !    EXEMPLES D'US DE FUNCIONS MPI
+  !########################################################################
+              !DO k=1,3
+                  !CALL MPI_ALLGATHERV(v(1:n_particles,k), n_particles, MPI_DOUBLE_PRECISION, v(:,k), n_particles, 0,&
+                                      !& MPI_DOUBLE_PRECISION, MPI_COMM_WORLD,ierror )
+                    !CALL MPI_BCAST(v(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
+                !END DO
+              !call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+
   use READ_DATA
   use ALLOCATE_VARS
   use Inicialitzar
@@ -18,69 +28,66 @@ PROGRAM SEQUENTIAL_MD
   call MPI_COMM_RANK(MPI_COMM_WORLD,taskid,ierror)
   call MPI_COMM_SIZE(MPI_COMM_WORLD,numproc,ierror)
   taskid=taskid+1
-  print*,taskid
+  !print*,taskid
   master_task=1
-  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+  !call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 
-  if(taskid.eq.master_task)then
-    call srand(seed)
-    !LLEGIM EL FITXER INPUT AMB LES SEGÜENTS DADES:
-    !PARAMETRES DE DENSITAT, MASSA, TEMPERATURA DE REFERÈNCIA, TEMPERATURA DEL BANYS ETC.
-    call read_all_data()
-    !CALCULEM ELS PARÀMETRES GLOBALS DEL LATTICE: NÚMERO DE PARTÍCULES, LONGITUD DE LA CAIXA,
-    !DISTANCIA ENTRE PARTICULES ETC.
-    call other_global_vars()
-    !PARALLELIZATION MPI SUBROUTINES IN ORDER TO DISTRIBUTE THE PARTICLES AMONG THE PROCESSORS
-    call simple_loop_matrix()
-    DO k=1,numproc
-      print*,index_matrix(k,:)
-    ENDDO
-    call double_loop_matrix()
-    DO k=1,numproc
-      print*,double_matrix(k,:)
-    ENDDO
   
+  call srand(seed)
+  !LLEGIM EL FITXER INPUT AMB LES SEGÜENTS DADES:
+  !PARAMETRES DE DENSITAT, MASSA, TEMPERATURA DE REFERÈNCIA, TEMPERATURA DEL BANYS ETC.
+  call read_all_data()
+  !CALCULEM ELS PARÀMETRES GLOBALS DEL LATTICE: NÚMERO DE PARTÍCULES, LONGITUD DE LA CAIXA,
+  !DISTANCIA ENTRE PARTICULES ETC.
+  call other_global_vars()
+  !PARALLELIZATION MPI SUBROUTINES IN ORDER TO DISTRIBUTE THE PARTICLES AMONG THE PROCESSORS
+  call simple_loop_matrix()
+  !DO k=1,numproc
+    !print*,index_matrix(k,:)
+  !ENDDO
+ 
   !INICITALITZEM LES VARIABLES D'ESTAT EN UNITATS REDUÏDES
   call INITIALIZE_VARS()
   !DEFINIM LA CONFIGURACIÓ INICIAL DE LES PARTICULES COM UNA XARXA FCC
   call FCC_Initialize(r)
   !LI DONEM UNA VELOCITAT INICIAL A LES PARTICULES (VELOCITATS INICIALS RANDOM)
-  call Uniform_velocity(v,T_ini)
-  !FEM UN REESCALATGE DE LES VELOCITATS A LA TEMPERATURA INICIAL
-  !LI DONEM UNA TEMPERATURA INICIAL SUFICIENTMENT GRAN COM PER DESFER LA ESTRUCTURA
-  !CRISTALINA (MELTING)
-  call VELO_RESCALING_MOD(v,T_therm_prov)
-  !UN COP CALCULAT EL NÚMERO DE ITERACIONS NECESSARIES PER FONDRE EL SÒLID INICIAL
-  !APLIQUEM EL TERMOSTAT DE ANDERSEN TANTS COPS COM SIGUIN NECESSARIS
-  !cutoff_aux=0.99*L*5d-1
-  !CALL INTERACTION_CUTOFF(r,F,cutoff_aux)
-  print*,'master of the initialization',taskid
+  if(taskid.eq.master_task)then 
+    call Uniform_velocity(v,T_ini)
+    !FEM UN REESCALATGE DE LES VELOCITATS A LA TEMPERATURA INICIAL
+    !LI DONEM UNA TEMPERATURA INICIAL SUFICIENTMENT GRAN COM PER DESFER LA ESTRUCTURA
+    !CRISTALINA (MELTING)
+    call VELO_RESCALING_MOD(v,T_therm_prov)
+    !UN COP CALCULAT EL NÚMERO DE ITERACIONS NECESSARIES PER FONDRE EL SÒLID INICIAL
+    !APLIQUEM EL TERMOSTAT DE ANDERSEN TANTS COPS COM SIGUIN NECESSARIS
+    !cutoff_aux=0.99*L*5d-1
+    !CALL INTERACTION_CUTOFF(r,F,cutoff_aux)
+    
   endif
+  DO k=1,3
+        CALL MPI_BCAST(v(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
+    END DO
   call MPI_BARRIER(MPI_COMM_WORLD,ierror)
-  IF(taskid.eq.master_task) THEN
-  DO k=1,numproc-1
-    print*,'bucle'
-    CALL MPI_SEND(nworking_simple,1,MPI_INTEGER,k,nworking_simple,MPI_COMM_WORLD,ierror)
-  END DO
-  END IF
-  !stop
-  !call MPI_BARRIER(comm,ierror)
-  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
-  print*,'beafor melting',taskid,nworking_simple,nworking_double
-  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
-  !-------------------------------------------
-  print*,'before finalize'
-  CALL MPI_FINALIZE(ierror)
-  print*,'after finalize'
-  stop
-  !-------------------------------------------
+  !####################################################################################
+  !####################################################################################
+  !CORRECT TILL HERE
+  !####################################################################################
+  !####################################################################################
   DO i=1,3!n_melting
     print*,i,'task',taskid
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     call velo_verlet(r,v,F) !EN UNA REGIÓ LxL AMB UNES CONDICIONS DE CONTORN PERIODIQUES
                             ! EN FUNCIO DE LES FORCES D'INTERACCIÓ S'ACTUALITZEN LES VELOCITATS
                             ! I LES POSICIONS DE LES PARTÍCULES
-    print*,'mid bucle malting'
+!####################################################################################
+!####################################################################################
+print*,'before finalize'
+CALL MPI_FINALIZE(ierror)
+print*,'after finalize'
+stop
+!####################################################################################
+!####################################################################################
+
+
     call andersen(v,T_therm_prov) !AMB EL TERMOSTAT RECALCULEM LES VELOCITATS ARA EN FUNCIO
                                   ! DE LES TEMPERATURES
   end do
