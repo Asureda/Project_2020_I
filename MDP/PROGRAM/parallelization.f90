@@ -9,7 +9,7 @@ module parallel_routines
 
         a=INT(REAL(n_particles)/REAL(numproc))
         print*,'particules',n_particles,'CPUs',numproc,'part/CPU',a
-        allocate(index_matrix(numproc,2),desplac(numproc))
+        allocate(index_matrix(numproc,2),desplac(numproc),num_send(numproc))
         index_matrix=0
 
         IF (paral_simple.eqv..TRUE.) THEN
@@ -32,11 +32,13 @@ module parallel_routines
           index_matrix(1,1)=1
           index_matrix(1,2)=n_particles
         END IF
-        desplac(1)=0
+        
         DO i=2,numproc
           desplac(i)=index_matrix(i-1,2)
+          num_send(i)=index_matrix(i,2)-index_matrix(i,1)+1
         END DO
-
+        desplac(1)=0
+        num_send(1)=index_matrix(1,2)-index_matrix(1,1)+1
     END SUBROUTINE
 
     SUBROUTINE double_loop_matrix()
