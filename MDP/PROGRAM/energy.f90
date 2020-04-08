@@ -53,7 +53,7 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
             CALL MPI_ALLGATHERV(f(index_matrix(taskid,1):index_matrix(taskid,2),k), &
                                 &(index_matrix(taskid,2)-index_matrix(taskid,1)+1), &
                                 &MPI_DOUBLE_PRECISION,&
-                                & f(:,k),(index_matrix(taskid,2)-index_matrix(taskid,1)+1), (index_matrix(taskid,1)-1),&
+                                & f(:,k),(index_matrix(taskid,2)-index_matrix(taskid,1)+1), 0,&
                                 & MPI_DOUBLE_PRECISION, MPI_COMM_WORLD,ierror )
         END DO
         print*,'after algather'

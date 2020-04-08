@@ -11,6 +11,7 @@ MODULE READ_DATA
     character(32) hostname
 
     integer, dimension(:,:), allocatable :: index_matrix, double_matrix
+    integer, dimension(:), allocatable :: desplac
 
     ! Variables del fitxer parameters.dat
     INTEGER :: n_particles
