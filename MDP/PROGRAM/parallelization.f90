@@ -12,7 +12,7 @@ module parallel_routines
         allocate(index_matrix(numproc,2),desplac(numproc),num_send(numproc))
         index_matrix=0
 
-        IF (paral_simple.eqv..TRUE.) THEN
+        !IF (paral_simple.eqv..TRUE.) THEN
           if(n_particles>numproc)then
             nworking_simple=numproc
             DO i=1,numproc
@@ -20,18 +20,18 @@ module parallel_routines
               index_matrix(i,2)=i*a
             ENDDO
             index_matrix(numproc,2)=n_particles
-          else
-            nworking_simple=n_particles
-            DO i=1,n_particles
-              index_matrix(i,1)=i
-              index_matrix(i,2)=i
-            ENDDO
+          ! else
+          !   nworking_simple=n_particles
+          !   DO i=1,n_particles
+          !     index_matrix(i,1)=i
+          !     index_matrix(i,2)=i
+          !   ENDDO
           endif
-        else
-          nworking_simple=1
-          index_matrix(1,1)=1
-          index_matrix(1,2)=n_particles
-        END IF
+        !else
+          !nworking_simple=1
+          !index_matrix(1,1)=1
+          !index_matrix(1,2)=n_particles
+        !END IF
         
         DO i=2,numproc
           desplac(i)=index_matrix(i-1,2)

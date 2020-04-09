@@ -13,13 +13,22 @@ contains
 SUBROUTINE VELO_VERLET(r,v,F)
     INTEGER i,k
     REAL*8 r(:,:),v(:,:),r0(n_particles,3),v0(n_particles,3),f0(n_particles,3)
-    REAL*8 F(:,:),cutoff
+    REAL*8 F(:,:),cutoff,kinetic1
     !REAL*8, DIMENSION(n_particles,3) :: tot_dis = 0
     !REAL*8, DIMENSION(n_verlet) :: disp_sq
     cutoff=0.99*L*5d-1
     r0=r
     v0=v
     f0=f
+    ! call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+    ! print*,'forces in verlet',taskid,F(250,:)
+    ! call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+    ! print*,'velocity in verlet',taskid,v(250,:)
+    ! call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+    ! print*,'pos in verlet',taskid,r(250,:)
+    ! call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+    ! print*,'--------------------------------'
+    call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     CALL INTERACTION_CUTOFF(r,F0,cutoff)
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 !####################################################################################
@@ -31,14 +40,14 @@ SUBROUTINE VELO_VERLET(r,v,F)
         !v(i,:)=v(i,:)+5d-1*F(i,:)*h
     !END DO
     !taskid= identificador del processador
-    IF (taskid.le.nworking_simple) THEN
+    !IF (taskid.le.nworking_simple) THEN
         DO i=index_matrix(taskid,1),index_matrix(taskid,2)
             r(i,:)=r0(i,:)+v0(i,:)*h+5d-1*F0(i,:)*h*h
             r(i,1)=PBC2(r(i,1),L)
             r(i,2)=PBC2(r(i,2),L)
             r(i,3)=PBC2(r(i,3),L)
         END DO
-    END IF
+    !END IF
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 
     DO k=1,3
@@ -50,22 +59,34 @@ SUBROUTINE VELO_VERLET(r,v,F)
     CALL INTERACTION_CUTOFF(r,F,cutoff)
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     kinetic=0d0
+    kinetic1=0d0
 
-    IF (taskid.le.nworking_simple) THEN
+    !IF (taskid.le.nworking_simple) THEN
         DO i=index_matrix(taskid,1),index_matrix(taskid,2)
             v(i,:)=v0(i,:)+5d-1*(F(i,:)+F0(i,:))*h
             !v(i,:)=v(i,:)+5d-1*F(i,:)*h
             kinetic=kinetic+5d-1*(v(i,1)**2d0+v(i,2)**2d0+v(i,3)**2d0)
         END DO
+
+
         !print*,'out verlet'
-        RETURN
-    END IF
+    !END IF
     DO k=1,3
     CALL MPI_ALLGATHERV(v(index_matrix(taskid,1):index_matrix(taskid,2),k),&
                         & (index_matrix(taskid,2)-index_matrix(taskid,1)+1),MPI_DOUBLE_PRECISION, &
                         & v(:,k),num_send,desplac,MPI_DOUBLE_PRECISION,MPI_COMM_WORLD,ierror)
     END DO
+    !
     call MPI_REDUCE(kinetic,kinetic,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
+    !kinetic=kinetic/(256d0)
+    ! call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+    ! print*,'forces in verlet',taskid,F(250,:)
+    ! call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+    ! print*,'velocity in verlet',taskid,v(250,:)
+    ! call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+    ! print*,'pos in verlet',taskid,r(250,:)
+    ! call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+    ! print*,'--------------------------------'
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 
 END SUBROUTINE
