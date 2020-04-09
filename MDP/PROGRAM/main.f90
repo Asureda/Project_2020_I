@@ -61,11 +61,22 @@ PROGRAM SEQUENTIAL_MD
     !APLIQUEM EL TERMOSTAT DE ANDERSEN TANTS COPS COM SIGUIN NECESSARIS
     !cutoff_aux=0.99*L*5d-1
     !CALL INTERACTION_CUTOFF(r,F,cutoff_aux)
-    
+    print*,r
+    !DO k=1,n_particles
+        !print*,k,'pos',r(k,:)
+    !END DO
   endif
   DO k=1,3
         CALL MPI_BCAST(v(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
+        CALL MPI_BCAST(r(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
     END DO
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+  print*,'r',r(50,:)
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+  print*,'v',v(50,:)
+  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+  print*,'f',f(50,:)
   call MPI_BARRIER(MPI_COMM_WORLD,ierror)
   !####################################################################################
   !####################################################################################
@@ -75,17 +86,20 @@ PROGRAM SEQUENTIAL_MD
   DO i=1,3!n_melting
     print*,i,'task',taskid
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
-    call velo_verlet(r,v,F) !EN UNA REGIÓ LxL AMB UNES CONDICIONS DE CONTORN PERIODIQUES
+    call velo_verlet(r,v,F)
+    print*,'verlet melting',pressure*press_re !EN UNA REGIÓ LxL AMB UNES CONDICIONS DE CONTORN PERIODIQUES
                             ! EN FUNCIO DE LES FORCES D'INTERACCIÓ S'ACTUALITZEN LES VELOCITATS
                             ! I LES POSICIONS DE LES PARTÍCULES
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
-    !call andersen(v,T_therm_prov) !AMB EL TERMOSTAT RECALCULEM LES VELOCITATS ARA EN FUNCIO
+    call andersen(v,T_therm_prov) !AMB EL TERMOSTAT RECALCULEM LES VELOCITATS ARA EN FUNCIO
                                   ! DE LES TEMPERATURES
   end do
   call MPI_BARRIER(MPI_COMM_WORLD,ierror)
   print*,'FINAL MELTING',taskid
   call MPI_BARRIER(MPI_COMM_WORLD,ierror)
-print*,'after verlet from proc',taskid,'positions',r(1,:),pressure,potential,kinetic  
+  print*,f(60,:)
+  
+  print*,'after verlet from proc',taskid,'positions',r(1,:),pressure,potential,kinetic  
   !AMB EL SÒLID FOS I LES PARTICULES MOVENT-SE COM UN FLUID LES VELOCITATS ES REESCALEN CALCULANT
   !L'ENERGIA CINÈTICA DEGUDA A LA TEMPERATURA DE LES PARTÍCULES
   !COPIEM ELS PRIMERS RESULTATS DE LES PARTICULES COM A FLUID, VELOCITAT, POSICIONS, TEMPERATURES I
@@ -114,14 +128,14 @@ print*,'after verlet from proc',taskid,'positions',r(1,:),pressure,potential,kin
   call MPI_BARRIER(MPI_COMM_WORLD,ierror)
   print*,taskid
   call MPI_BARRIER(MPI_COMM_WORLD,ierror)
-  DO i=1,20
+  DO i=1,n_verlet
     IF(taskid.eq.master_task) THEN
     t=t_a+i*h
     END IF
     CALL MPI_BARRIER(comm,ierror)
     call VELO_VERLET(r,v,F)
     if(is_thermostat.eqv..true.)THEN
-      !call andersen(v,T_therm)
+      call andersen(v,T_therm)
     end if
   !PER OBTENIR LA DISTRIBUCIÓ RADIAL DE LES PARTÍCULES A CADA TIME STEP
   !DE LES PARTÍCULES DE LA REGIÓ DE LA CAIXA LI APLIQUEM LA FUNCIÍ G EN FUNCIÓ
@@ -130,8 +144,8 @@ print*,'after verlet from proc',taskid,'positions',r(1,:),pressure,potential,kin
       if((mod(i,n_meas).eq.0).and.(is_print_thermo.eqv..true.))then
         temp_instant=2d0*kinetic/(3d0*n_particles)
         pressure=(density*temp_instant+pressure/(3d0*L**3d0))
-        print*,'pressio BONA  de la SILVIA',pressure,temp_instant
-        print*,'energya BONA  de la SILVIA',kinetic,potential
+        print*,'pressio BONA  de la SILVIA',pressure/2.,temp_instant
+        print*,'energya BONA  de la SILVIA',kinetic/(1d0*n_particles),potential/(1d0*n_particles)
         print*,'forca BONA  de la SILVIA', F(1,:)
         print*,'-------------------------------------------------------------'
         write(51,*)t,kinetic,potential,(kinetic+potential),temp_instant,pressure
