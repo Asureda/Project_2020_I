@@ -18,7 +18,7 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
     F=0d0
     potential=0d0
     !print*,'hola-1'
-    pressure=0.0
+    pressure=0d0
     !print*,'hola'
     !IF (paral_double.eqv..TRUE.)THEN
         !IF (taskid.le.nworking_simple) THEN
