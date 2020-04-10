@@ -28,7 +28,7 @@ contains
             END DO
         END DO
     END DO
-    PRINT*, 'particles positioned', n-1, 'of a total imput', n_particles
+    !PRINT*, 'particles positioned', n-1, 'of a total imput', n_particles
     RETURN
     end subroutine FCC_Initialize
 
