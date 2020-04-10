@@ -1,6 +1,6 @@
 #Execute file
 #Getting the temporal file name
-tmp_folder=$(date +'%d_%m_%Y_%H_%M_%S')
+tmp_folder=$(date +'%Y_%m_%d_%H_%M_%S')
 
 # Creating the tmp file in PROGRM
 
@@ -30,7 +30,7 @@ cd $tmp_folder/
 
 #Execute the progrm
 
-mpirun -np 4 main
+./main
 gnuplot gr.gnu
 gnuplot real.gnu
 gnuplot red.gnu
