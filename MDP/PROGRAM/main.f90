@@ -1,19 +1,10 @@
 PROGRAM SEQUENTIAL_MD
   !use MPI
-  !########################################################################
-  !    EXEMPLES D'US DE FUNCIONS MPI
-  !########################################################################
-              !DO k=1,3
-                  !CALL MPI_ALLGATHERV(v(1:n_particles,k), n_particles, MPI_DOUBLE_PRECISION, v(:,k), n_particles, 0,&
-                                      !& MPI_DOUBLE_PRECISION, MPI_COMM_WORLD,ierror )
-                    !CALL MPI_BCAST(v(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
-                !END DO
-              !call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+
 
   use READ_DATA
   use ALLOCATE_VARS
   use Inicialitzar
-  use Distribucio_Uniforme_vel
   use Interaction_Cutoff_Modul
   use Verlet_Algorithm
   use Andersen_modul
@@ -23,16 +14,18 @@ PROGRAM SEQUENTIAL_MD
 
   IMPLICIT NONE
   INTEGER k, master_task
-
+  REAL*8 starttime, endtime
   call MPI_INIT(ierror)
   call MPI_COMM_RANK(MPI_COMM_WORLD,taskid,ierror)
   call MPI_COMM_SIZE(MPI_COMM_WORLD,numproc,ierror)
+  starttime = MPI_WTIME()
+
   taskid=taskid+1
   !print*,taskid
   master_task=1
   !call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 
-  
+
   call srand(seed)
   !LLEGIM EL FITXER INPUT AMB LES SEGÜENTS DADES:
   !PARAMETRES DE DENSITAT, MASSA, TEMPERATURA DE REFERÈNCIA, TEMPERATURA DEL BANYS ETC.
@@ -45,13 +38,13 @@ PROGRAM SEQUENTIAL_MD
   !DO k=1,numproc
     !print*,index_matrix(k,:)
   !ENDDO
- 
+
   !INICITALITZEM LES VARIABLES D'ESTAT EN UNITATS REDUÏDES
   call INITIALIZE_VARS()
   !DEFINIM LA CONFIGURACIÓ INICIAL DE LES PARTICULES COM UNA XARXA FCC
-  call FCC_Initialize(r)
-  !LI DONEM UNA VELOCITAT INICIAL A LES PARTICULES (VELOCITATS INICIALS RANDOM)
-  if(taskid.eq.master_task)then 
+  if(taskid.eq.master_task)then
+    call FCC_Initialize(r)
+    !LI DONEM UNA VELOCITAT INICIAL A LES PARTICULES (VELOCITATS INICIALS RANDOM)
     call Uniform_velocity(v,T_ini)
     !FEM UN REESCALATGE DE LES VELOCITATS A LA TEMPERATURA INICIAL
     !LI DONEM UNA TEMPERATURA INICIAL SUFICIENTMENT GRAN COM PER DESFER LA ESTRUCTURA
@@ -98,8 +91,8 @@ PROGRAM SEQUENTIAL_MD
   print*,'FINAL MELTING',taskid
   call MPI_BARRIER(MPI_COMM_WORLD,ierror)
   print*,f(60,:)
-  
-  print*,'after verlet from proc',taskid,'positions',r(1,:),pressure,potential,kinetic  
+
+  print*,'after verlet from proc',taskid,'positions',r(1,:),pressure,potential,kinetic
   !AMB EL SÒLID FOS I LES PARTICULES MOVENT-SE COM UN FLUID LES VELOCITATS ES REESCALEN CALCULANT
   !L'ENERGIA CINÈTICA DEGUDA A LA TEMPERATURA DE LES PARTÍCULES
   !COPIEM ELS PRIMERS RESULTATS DE LES PARTICULES COM A FLUID, VELOCITAT, POSICIONS, TEMPERATURES I
@@ -144,11 +137,12 @@ PROGRAM SEQUENTIAL_MD
       if((mod(i,n_meas).eq.0).and.(is_print_thermo.eqv..true.))then
         temp_instant=2d0*kinetic/(3d0*n_particles)
         pressure=(density*temp_instant+pressure/(3d0*L**3d0))
-        print*,'pressio BONA  de la SILVIA',pressure/2.,temp_instant
-        print*,'energya BONA  de la SILVIA',kinetic/(1d0*n_particles),potential/(1d0*n_particles)
+        print*,'pressió',pressure/2.,temp_instant
+        print*,'Kinetic, Potential',kinetic/(1d0*n_particles),potential/(2d0*n_particles)
+        print*,'Energia',kinetic/(1d0*n_particles)+potential/(2d0*n_particles)
         print*,'forca BONA  de la SILVIA', F(1,:)
         print*,'-------------------------------------------------------------'
-        write(51,*)t,kinetic,potential,(kinetic+potential),temp_instant,pressure
+        write(51,*)t,kinetic/(1d0*n_particles),potential/(2d0*n_particles),(kinetic/(1d0*n_particles)+potential/(2d0*n_particles)),temp_instant,pressure/2.
         write(52,*)t*time_re,kinetic*energy_re,potential*energy_re,(kinetic+potential)*energy_re,temp_instant*&
                                                                                       &temp_re,pressure*press_re
       endif
@@ -167,6 +161,10 @@ PROGRAM SEQUENTIAL_MD
   enddo
 !####################################################################################
 !####################################################################################
+  endtime = MPI_WTIME()
+  IF (taskid.eq.master_task) THEN
+    print*,'time = ',endtime-starttime
+  END IF
 print*,'before finalize'
 CALL MPI_FINALIZE(ierror)
 print*,'after finalize'
@@ -184,5 +182,7 @@ stop
     endif
     print*,'PROGRAM END'
   END IF
+
+
   CALL MPI_FINALIZE(ierror)
 END PROGRAM SEQUENTIAL_MD
