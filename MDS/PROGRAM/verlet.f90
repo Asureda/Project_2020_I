@@ -13,7 +13,8 @@ SUBROUTINE VELO_VERLET(r,v,F)
     INTEGER i
     REAL*8 r(:,:),v(:,:),r0(n_particles,3),v0(n_particles,3),f0(n_particles,3)
     REAL*8 F(:,:),cutoff
-    cutoff=0.99*L*5d-1
+   ! cutoff=0.99*L*5d-1
+    cutoff=6.6
     r0=r
     v0=v
     f0=f
