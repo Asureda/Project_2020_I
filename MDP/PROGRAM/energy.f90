@@ -20,7 +20,6 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
     !print*,'hola-1'
     pressure=0.0
     !print*,'hola'
-    call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     !IF (paral_double.eqv..TRUE.)THEN
         !IF (taskid.le.nworking_simple) THEN
             DO i=index_matrix(taskid,1),index_matrix(taskid,2)
@@ -32,12 +31,12 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
                         d=(dx**2d0+dy**2d0+dz**2d0)**0.5
 
                         CALL L_J(d,ff,pot,cutoff)
-                        F(i,1)=F(i,1)+ff*dx
-                        F(i,2)=F(i,2)+ff*dy
-                        F(i,3)=F(i,3)+ff*dz
-                                !F(j,1)=F(j,1)-ff*dx
-                                !F(j,2)=F(j,2)-ff*dy
-                                !F(j,3)=F(j,3)-ff*dz
+                        F(i,1)=F(i,1)+ff*dx/2.
+                        F(i,2)=F(i,2)+ff*dy/2.
+                        F(i,3)=F(i,3)+ff*dz/2.
+                        F(j,1)=F(j,1)-ff*dx/2.
+                        F(j,2)=F(j,2)-ff*dy/2.
+                        F(j,3)=F(j,3)-ff*dz/2.
                         !WE ARE DOUBLE COUNTING POTENTIAL AND PRESSURE
                         !MUST DIVIDE BY TWO LATER !!!!
                         potential=potential+pot
@@ -56,13 +55,6 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
         !potential=potential/2d0
         !pressure=pressure/2d0
         call MPI_BARRIER(MPI_COMM_WORLD,ierror)
-        DO k=1,3
-            CALL MPI_ALLGATHERV(f(index_matrix(taskid,1):index_matrix(taskid,2),k), &
-                                &(index_matrix(taskid,2)-index_matrix(taskid,1)+1), &
-                                &MPI_DOUBLE_PRECISION,&
-                                & f(:,k),num_send, desplac,&
-                                & MPI_DOUBLE_PRECISION, MPI_COMM_WORLD,ierror ) ! OPCIONAL crec, amb posicions es suficient
-        END DO
         !print*,'after algather',taskid,'force', f(1,:)
     !END IF
     ! ELSE if(paral_double.eqv..false.)then

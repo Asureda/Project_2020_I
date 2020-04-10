@@ -28,9 +28,7 @@ SUBROUTINE VELO_VERLET(r,v,F)
     ! print*,'pos in verlet',taskid,r(250,:)
     ! call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     ! print*,'--------------------------------'
-    call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     CALL INTERACTION_CUTOFF(r,F0,cutoff)
-    call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 !####################################################################################
 !####################################################################################
 !CORRECT TILL HERE
@@ -71,14 +69,14 @@ SUBROUTINE VELO_VERLET(r,v,F)
 
         !print*,'out verlet'
     !END IF
-    DO k=1,3
-    CALL MPI_ALLGATHERV(v(index_matrix(taskid,1):index_matrix(taskid,2),k),&
-                        & (index_matrix(taskid,2)-index_matrix(taskid,1)+1),MPI_DOUBLE_PRECISION, &
-                        & v(:,k),num_send,desplac,MPI_DOUBLE_PRECISION,MPI_COMM_WORLD,ierror)
-    END DO
+    !DO k=1,3
+    !CALL MPI_ALLGATHERV(v(index_matrix(taskid,1):index_matrix(taskid,2),k),&
+    !                    & (index_matrix(taskid,2)-index_matrix(taskid,1)+1),MPI_DOUBLE_PRECISION, &
+    !                    & v(:,k),num_send,desplac,MPI_DOUBLE_PRECISION,MPI_COMM_WORLD,ierror)
+    !END DO
     !
     call MPI_REDUCE(kinetic,kinetic,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
-    !kinetic=kinetic/(256d0)
+
     ! call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     ! print*,'forces in verlet',taskid,F(250,:)
     ! call MPI_BARRIER(MPI_COMM_WORLD,ierror)
