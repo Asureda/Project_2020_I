@@ -27,29 +27,30 @@ PROGRAM SEQUENTIAL_MD
 !
   call FCC_Initialize(r)
   !LI DONEM UNA VELOCITAT INICIAL A LES PARTICULES (VELOCITATS INICIALS RANDOM)
-  call Uniform_velocity(v,T_ini)
+  call Uniform_velocity(v)
   !FEM UN REESCALATGE DE LES VELOCITATS A LA TEMPERATURA INICIAL
   !LI DONEM UNA TEMPERATURA INICIAL SUFICIENTMENT GRAN COM PER DESFER LA ESTRUCTURA
   !CRISTALINA (MELTING)
   call VELO_RESCALING_MOD(v,T_therm_prov)
   !UN COP CALCULAT EL NÚMERO DE ITERACIONS NECESSARIES PER FONDRE EL SÒLID INICIAL
   !APLIQUEM EL TERMOSTAT DE ANDERSEN TANTS COPS COM SIGUIN NECESSARIS
-  !cutoff_aux=0.99*L*5d-1
+  !cutoff_aux=0.99*L*i5d-1
   !CALL INTERACTION_CUTOFF(r,F,cutoff_aux)
-  DO i=1,n_melting
-    call velo_verlet(r,v,F) !EN UNA REGIÓ LxL AMB UNES CONDICIONS DE CONTORN PERIODIQUES
-                            ! EN FUNCIO DE LES FORCES D'INTERACCIÓ S'ACTUALITZEN LES VELOCITATS
-                            ! I LES POSICIONS DE LES PARTÍCULES
-    call andersen(v,T_therm_prov) !AMB EL TERMOSTAT RECALCULEM LES VELOCITATS ARA EN FUNCIO
-                                  ! DE LES TEMPERATURES
-  end do
-  print*,'FINAL MELTING'
+
+   DO i=1,n_melting
+    call velo_verlet(r,v,F)
+    !if(is_thermostat.eqv..true.)then
+    call andersen(v,T_therm_prov)
+    !end if
+   END DO
+
+ ! print*,'FINAL MELTING'
   !AMB EL SÒLID FOS I LES PARTICULES MOVENT-SE COM UN FLUID LES VELOCITATS ES REESCALEN CALCULANT
   !L'ENERGIA CINÈTICA DEGUDA A LA TEMPERATURA DE LES PARTÍCULES
   !COPIEM ELS PRIMERS RESULTATS DE LES PARTICULES COM A FLUID, VELOCITAT, POSICIONS, TEMPERATURES I
   !PRESSIÓ, EN UNITATS REDUÏDES I NO REDUÏDES I LES POSICIONS DE LES PARTÍCULES
   !I LES ESCRIBIIM EN UN FITXER OUTPUT
-  call Velo_Rescaling(v,T_ini)
+  !call VELO_RESCALING_MOD(v,T_ini)
   open(51,file='thermodynamics_reduced.dat')
   open(52,file='thermodynamics_real.dat')
   open(53,file='distrib_funct.dat')
@@ -61,7 +62,7 @@ PROGRAM SEQUENTIAL_MD
   !cutoff_aux=0.99*L*5d-1
   !CALL INTERACTION_CUTOFF(r,F,cutoff_aux)
   pressure=(density*temp_instant+pressure/(3d0*L**3d0))
-  
+
   DO i=1,n_verlet
     t=t_a+i*h
     call VELO_VERLET(r,v,F)
@@ -82,6 +83,7 @@ PROGRAM SEQUENTIAL_MD
       print*,'potential',potential
       print*,'kinetic',kinetic
       print*,'energy',potential + kinetic
+      print*,'Temperatura red, real', temp_instant, temp_instant*temp_re
     endif
     if((mod(i,n_meas_gr).eq.0).and.(is_compute_gr.eqv..true.))then
       call RAD_DIST_INTER(r,g_r) !càlcul g(r) a cada pas
