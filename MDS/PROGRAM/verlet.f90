@@ -1,5 +1,5 @@
 ! Modul de l'algoritme d'integració Verlet
-! Integració de les equacions de Newton mitjançant l'integració de Verlet 
+! Integració de les equacions de Newton mitjançant l'integració de Verlet
 ! El modul consta de dos parts, en primer lloc el càlcul de les velocitats i posicions a partir de les configuracions inicials
 ! En segon lloc calcular les noves forces a partir de les posicions anteriors i tot seguit fer el càlcul de les noves velocitats v(t+h) a partir de les
 ! noves forces.
@@ -13,8 +13,8 @@ SUBROUTINE VELO_VERLET(r,v,F)
     INTEGER i
     REAL*8 r(:,:),v(:,:),r0(n_particles,3),v0(n_particles,3),f0(n_particles,3)
     REAL*8 F(:,:),cutoff
-   ! cutoff=0.99*L*5d-1
-    cutoff=6.6
+    cutoff=0.99*L*5d-1
+   ! cutoff=6.6
     r0=r
     v0=v
     f0=f
