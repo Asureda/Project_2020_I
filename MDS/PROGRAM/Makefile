@@ -26,9 +26,9 @@ FLAGS=-Wall  -fbounds-check
 #    ./$(TARGET)
 
 # Compilacio del main program
-$(TARGET) : read_data.o PBC.o Full_Modul_Reescalar.o Full_modul_Inicialitzar.o Full_Modul_Andersen.o Full_Modul_Distrib_Radial.o L_J.o vel_initial.o energy.o main_vars.o verlet.o $(TARGET).o 
+$(TARGET) : read_data.o PBC.o Full_Modul_Reescalar.o Full_modul_Inicialitzar.o Full_Modul_Andersen.o Full_Modul_Distrib_Radial.o L_J.o vel_initial.o energy.o main_vars.o verlet.o sample.o $(TARGET).o 
 	@echo "From MAKEFILE. Compiling main program"
-	$(F90) $(OPT) $(FLAGS) -o $(TARGET) $(TARGET).o energy.o PBC.o verlet.o vel_initial.o Full_Modul_Andersen.o Full_modul_Inicialitzar.o Full_Modul_Reescalar.o Full_Modul_Distrib_Radial.o L_J.o read_data.o main_vars.o
+	$(F90) $(OPT) $(FLAGS) -o $(TARGET) $(TARGET).o energy.o PBC.o verlet.o vel_initial.o Full_Modul_Andersen.o Full_modul_Inicialitzar.o Full_Modul_Reescalar.o Full_Modul_Distrib_Radial.o L_J.o read_data.o main_vars.o sample.o
 
 # Tots els fitxers amb extensio .f90 son compilats a objectes .o
 %.o : %.f90

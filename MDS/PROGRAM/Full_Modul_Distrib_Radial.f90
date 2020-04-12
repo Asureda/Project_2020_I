@@ -1,11 +1,10 @@
 module Distribucio_Radial
 
 use READ_DATA
-!Cridem el mòdul PBC definit  a l'arxiu PBC
 use PBC
 
-IMPLICIT NONE
 
+IMPLICIT NONE
 contains
 
     subroutine RAD_DIST_INTER(r,vec)
@@ -43,7 +42,6 @@ contains
         result(i)=vec(i)/aux
     END DO
     vec=0d0
-    vec=result 
+    vec=result
     end subroutine RAD_DIST_FINAL
-
 end module Distribucio_Radial

@@ -13,6 +13,8 @@ SUBROUTINE VELO_VERLET(r,v,F)
     INTEGER i
     REAL*8 r(:,:),v(:,:),r0(n_particles,3),v0(n_particles,3),f0(n_particles,3)
     REAL*8 F(:,:),cutoff
+    !REAL*8, DIMENSION(n_particles,3) :: tot_dis = 0
+    !REAL*8, DIMENSION(t_b) :: disp_sq
     cutoff=0.99*L*5d-1
     r0=r
     v0=v
@@ -20,6 +22,10 @@ SUBROUTINE VELO_VERLET(r,v,F)
     CALL INTERACTION_CUTOFF(r,F0,cutoff)
     DO i=1,n_particles
         r(i,:)=r0(i,:)+v0(i,:)*h+5d-1*F0(i,:)*h*h
+        !IF (t.le.t_b) then
+        !  tot_dis = tot_dis + v(i,:)*h
+        !  disp_sq(t)=sum(tot_dis*tot_dis)/(n_particles)
+        !end if
         r(i,1)=PBC2(r(i,1),L)
         r(i,2)=PBC2(r(i,2),L)
         r(i,3)=PBC2(r(i,3),L)
