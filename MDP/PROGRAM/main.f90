@@ -15,17 +15,19 @@ PROGRAM SEQUENTIAL_MD
   IMPLICIT NONE
   INTEGER k, master_task
   REAL*8 starttime, endtime
+  !#############################################################!
+  !            INITIALIZING MPI                                 !
+  !#############################################################!
   call MPI_INIT(ierror)
   call MPI_COMM_RANK(MPI_COMM_WORLD,taskid,ierror)
   call MPI_COMM_SIZE(MPI_COMM_WORLD,numproc,ierror)
   starttime = MPI_WTIME()
-
   taskid=taskid+1
-  !print*,taskid
   master_task=1
-  !call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 
-
+!#############################################################!
+!            READING AND SETTING VARIABLES                    !
+!#############################################################!
 
   call srand(seed)
   !LLEGIM EL FITXER INPUT AMB LES SEGÜENTS DADES:
@@ -39,6 +41,9 @@ PROGRAM SEQUENTIAL_MD
   !INICITALITZEM LES VARIABLES D'ESTAT EN UNITATS REDUÏDES
   call INITIALIZE_VARS()
   !DEFINIM LA CONFIGURACIÓ INICIAL DE LES PARTICULES COM UNA XARXA FCC
+!#############################################################!
+!            iNITIAL CONFIGURATION                            !
+!#############################################################!
   if(taskid.eq.master_task)then
     call FCC_Initialize(r)
     !LI DONEM UNA VELOCITAT INICIAL A LES PARTICULES (VELOCITATS INICIALS RANDOM)
@@ -53,7 +58,10 @@ PROGRAM SEQUENTIAL_MD
         CALL MPI_BCAST(r(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
     END DO
   call MPI_BARRIER(MPI_COMM_WORLD,ierror)
-  DO i=1,3!n_melting
+  !#############################################################!
+  !            MELTING THE FCC STRUCTURE                        !
+  !#############################################################!
+  DO i=1,n_melting
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     call velo_verlet(r,v,F)
                             !EN UNA REGIÓ LxL AMB UNES CONDICIONS DE CONTORN PERIODIQUES
@@ -67,15 +75,6 @@ PROGRAM SEQUENTIAL_MD
   !COPIEM ELS PRIMERS RESULTATS DE LES PARTICULES COM A FLUID, VELOCITAT, POSICIONS, TEMPERATURES I
   !PRESSIÓ, EN UNITATS REDUÏDES I NO REDUÏDES I LES POSICIONS DE LES PARTÍCULES
   !I LES ESCRIBIIM EN UN FITXER OUTPUT
-  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
-  IF(taskid.eq.master_task)THEN
-    call Velo_Rescaling(v,T_ini)
-  END IF
-  !call MPI_BARRIER(MPI_COMM_WORLD,ierror)
-  DO k=1,3
-        CALL MPI_BCAST(v(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
-  END DO
-  
   IF(taskid.eq.master_task)THEN
     open(51,file='thermodynamics_reduced.dat')
     open(52,file='thermodynamics_real.dat')
@@ -88,29 +87,33 @@ PROGRAM SEQUENTIAL_MD
   !VELOCITAT, POSICIONS, TEMPERATURES I
   !PRESSIÓ, EN UNITATS REDUÏDES I NO REDUÏDES, I LES POSICIONS DE LES PARTÍCULES
   !I LES ESCRIBIM EN UN FITXER OUTPUT, PER N TIME STEPS D'UN INTERVAL DE TEMPS
-
-  call MPI_BARRIER(MPI_COMM_WORLD,ierror)
   DO k=1,3
         CALL MPI_BCAST(v(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
         CALL MPI_BCAST(r(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
         CALL MPI_BCAST(F(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
   END DO
 
-
+!#############################################################!
+!      SYMULATION : VELOCITY VERLET INTEGRATION               !
+!#############################################################!
   DO i=1,n_verlet
     IF(taskid.eq.master_task) THEN
     t=t_a+i*h
     END IF
-
-
     CALL MPI_BARRIER(comm,ierror)
+
+    !VELOCITY VERLET STEP
     call VELO_VERLET(r,v,F)
+    !ANDERSEN THERMOSTAT
     if(is_thermostat.eqv..true.)THEN
       call andersen(v,T_therm)
     end if
   !PER OBTENIR LA DISTRIBUCIÓ RADIAL DE LES PARTÍCULES A CADA TIME STEP
   !DE LES PARTÍCULES DE LA REGIÓ DE LA CAIXA LI APLIQUEM LA FUNCIÍ G EN FUNCIÓ
   !DEL RADI
+  !#############################################################!
+  !        SAVING DATA TO FILES                                 !
+  !#############################################################!
               IF (taskid.eq.master_task) THEN
                 if((mod(i,n_meas).eq.0).and.(is_print_thermo.eqv..true.))then
                   temp_instant=2d0*kinetic/(3d0*n_particles)
@@ -118,8 +121,6 @@ PROGRAM SEQUENTIAL_MD
                   !print*,'pressió',pressure/2.,temp_instant
                   print*,'Kinetic, Potential',kinetic/(1d0*n_particles),potential/(2d0*n_particles),temp_instant
                   !print*,'Energia',kinetic/(1d0*n_particles)+potential/(2d0*n_particles)
-                  !print*,'forca BONA  de la SILVIA', F(1,:)
-                  !print*,'-------------------------------------------------------------'
                   write(51,*)t,kinetic/(1d0*n_particles),potential/(2d0*n_particles),(kinetic/(1d0*n_particles)+potential/(2d0*n_particles)),temp_instant,pressure/2.
                   write(52,*)t*time_re,kinetic*energy_re,potential*energy_re,(kinetic+potential)*energy_re,temp_instant*&
                                                                                                 &temp_re,pressure*press_re
@@ -136,8 +137,11 @@ PROGRAM SEQUENTIAL_MD
                   END DO
                 END IF
               END IF
-  enddo
+  !------------------------------------
+  enddo   ! FINAL VERLET
+  !------------------------------------
   
+  !COPMUTING THE FINAL RADIAL DISTRIBUTION FUNCTION
   IF (taskid.eq.master_task)then
     if((is_compute_gr.eqv..true.))then
       call RAD_DIST_INTER(r,g_r)
@@ -148,6 +152,10 @@ PROGRAM SEQUENTIAL_MD
       enddo
     endif    
   END IF
+
+  !#############################################################!
+  !        CLOSING MPI AND PROGRAM                              !
+  !#############################################################!
   endtime = MPI_WTIME()
   IF (taskid.eq.master_task) THEN
     print*,'time = ',endtime-starttime

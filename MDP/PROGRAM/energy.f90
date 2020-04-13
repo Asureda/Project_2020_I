@@ -39,10 +39,10 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
         END DO
     END DO
 
-    call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+    !call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     call MPI_REDUCE(potential,potential,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
     call MPI_REDUCE(pressure,pressure,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
-    call MPI_BARRIER(MPI_COMM_WORLD,ierror)
+    !call MPI_BARRIER(MPI_COMM_WORLD,ierror)
 END SUBROUTINE INTERACTION_CUTOFF
 
 END MODULE Interaction_Cutoff_Modul

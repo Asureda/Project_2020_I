@@ -40,7 +40,6 @@ SUBROUTINE VELO_VERLET(r,v,F)
 
     DO i=index_matrix(taskid,1),index_matrix(taskid,2)
         v(i,:)=v0(i,:)+5d-1*(F(i,:)+F0(i,:))*h
-        !v(i,:)=v(i,:)+5d-1*F(i,:)*h
         kinetic=kinetic+5d-1*(v(i,1)**2d0+v(i,2)**2d0+v(i,3)**2d0)
     END DO
     call MPI_REDUCE(kinetic,kinetic,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
