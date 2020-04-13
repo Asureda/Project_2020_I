@@ -1,11 +1,17 @@
+########################################################
+#      GRAPHIC OF THE RADIAL DISTRIBUTION FUNCTION     #
+########################################################
+
+# SET TERMINAL
 set term png
-set xlabel"r(r/{/Symbol s})"
-set ylabel"g(r)(a.u.)
-set key outside
 
+# RDF (g(r))
+set title 'Radial Distribution Function'
+set xlabel 'r (Angstrom)'
+set ylabel 'g(r)'
+set tics font ", 10"
+set autoscale
+
+# Generate output file
 set output 'g_r.png'
-plot 'distrib_funct.dat' u 1:2 w l t'g(r)'
-
-#set term eps enhanced
-#set output'g_r.eps'
-#replot
+plot 'distrib_funct.dat' u 1:2 notitle w l lw 1 lc rgb "dark-violet"
