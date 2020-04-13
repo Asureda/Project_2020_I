@@ -18,8 +18,8 @@ MODULE ALLOCATE_VARS
         temp_re=epsilon/k_B   !Kelvin
         energy_re=epsilon     !kJ/mol
         dist_re=sigma         !Angstroms
-        time_re=1d-13*sqrt(mass*sigma**2d0/epsilon)  !Seconds
-        press_re=1d33*epsilon/(n_avog*sigma**3d0)          !Pascals
+        time_re=0.1*sqrt(mass*sigma**2d0/epsilon)  !Picoseconds
+        press_re=1d33*epsilon/(n_avog*sigma**3d0)  !Pascals
         n_mols=n_particles/n_avog
         total_mass=n_mols*mass
         rho_re=mass*1d24/(sigma**3d0*n_avog)

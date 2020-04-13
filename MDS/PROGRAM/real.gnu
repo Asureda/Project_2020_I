@@ -1,20 +1,58 @@
+################################################################################
+# GRAPHIC OF THE ENERGIES, INSTANTANEOUS TEMPERATURE AND PRESSURE (REAL UNITS) #
+################################################################################
+
+# SET TERMINAL
 set term png
-set output 'energy_real.png'
-set xlabel"t(seconds)"
-set ylabel"energy(kJ/mol)"
+
+# ENERGIES ---------------------------------------------------------------------
+set title '<Energies> vs time'
+set xlabel 'time (ps)'
+set ylabel '<Energies> (kJ/mol)'
+set tics font ", 10"
+set autoscale
+
 set key outside
-set style line 7 lc rgb '#E41A1C' lw 1 
-set style line 8 lc rgb '#440154' lw 1 
-set style line 9 lc rgb '#21908d' lw 1 
+set key bottom
+set key horizontal
 
-plot 'thermodynamics_real.dat' u 1:($2) w l ls 7 t'kinetic', '' u 1:($3) w l ls 8 t'pot', '' u 1:($4) w l ls 9 t'tot'
+# Generate output file
+set output 'energy_real.png'
 
+plot 'thermodynamics_real.dat' u 1:($2) t '<Kinetic Energy>' w l lw 1 lc rgb "orange",\
+'' u 1:($3) t '<Potential Energy>' w l lw 1 lc rgb "green",\
+'' u 1:($4) t '<Total Energy>' w l lw 1 lc rgb "#9400d3"
+
+
+# INSTANTANEOUS TEMPERATURE ----------------------------------------------------
+set title 'Instantaneous Temperature vs time'
+set xlabel 'time (ps)'
+set ylabel 'Temperature (K)'
+set tics font ", 10"
+set autoscale
+
+set key outside
+set key bottom
+set key horizontal
+
+# Generate output file
 set output 'temperature_real.png'
-set ylabel"temperature(Kelvin)"
-set style line 10 lc rgb '#e56b5d' lw 1
-plot 'thermodynamics_real.dat' u 1:5 w l ls 10 t'temperature'
 
+plot 'thermodynamics_real.dat' u 1:5 notitle w l lw 1 lc rgb "#00008b"
+
+
+# PRESSURE ----------------------------------------------------------------------
+set title 'Pressure vs time'
+set xlabel 'time (ps)'
+set ylabel 'Pressure (Pa)'
+set tics font ", 10"
+set autoscale
+
+set key outside
+set key bottom
+set key horizontal
+
+# Generate output file
 set output 'pressure_real.png'
-set ylabel"pressure(Pascals)"
-set style line 11 lc rgb '#0c0887' lw 1
-plot 'thermodynamics_real.dat' u 1:6 w l ls 11 t'pressure'
+
+plot 'thermodynamics_real.dat' u 1:6 notitle w l lw 1 lc rgb "red"
