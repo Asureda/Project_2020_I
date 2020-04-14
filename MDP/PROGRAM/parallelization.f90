@@ -20,6 +20,7 @@ module parallel_routines
             DO i=1,numproc
               index_matrix(i,1)=a*(i-1)+1
               index_matrix(i,2)=i*a
+              !print*,'para',index_matrix(i,:)
             ENDDO
             index_matrix(numproc,2)=n_particles
           ! else
