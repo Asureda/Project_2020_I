@@ -52,6 +52,9 @@ PROGRAM SEQUENTIAL_MD
     !LI DONEM UNA TEMPERATURA INICIAL SUFICIENTMENT GRAN COM PER DESFER LA ESTRUCTURA
     !CRISTALINA (MELTING)
     !call VELO_RESCALING_MOD(v,T_therm_prov)
+    !DO k=1,numproc
+    !print*,index_matrix(k,:)
+  !END DO
   endif
   DO k=1,3
         CALL MPI_BCAST(v(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
@@ -120,7 +123,7 @@ PROGRAM SEQUENTIAL_MD
         CALL MPI_BCAST(r(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
         CALL MPI_BCAST(F(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
   END DO
-  print*,n_verlet
+  !print*,n_verlet
 
 !#############################################################!
 !      SYMULATION : VELOCITY VERLET INTEGRATION               !
