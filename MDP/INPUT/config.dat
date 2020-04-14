@@ -5,7 +5,7 @@
 .FALSE.           # Compute the radial distribution function
 5             # Number of iteratoins to to compute the function
 .TRUE.           # Compute the time-evolution of the positions
-100             # Number of iteratoins to to compute the position
+10             # Number of iteratoins to to compute the position
 .TRUE.          # Paralelize the simple loops
 .TRUE.          # Paralelize the double loops
 END
