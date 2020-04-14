@@ -68,12 +68,8 @@ PROGRAM SEQUENTIAL_MD
   DO i=1,n_melting
     call MPI_BARRIER(MPI_COMM_WORLD,ierror)
     call velo_verlet(r,v,F,i)
-    IF(taskid.eq.1)THEN
-    temp_instant=2d0*kinetic/(3d0*n_particles)
-    pressure=(density*temp_instant+pressure/(2d0*3d0*L**3d0))
-    !print*,'1',temp_instant,kinetic/(1d0*n_particles)
-    !print*,'2',potential/(2d0*n_particles),pressure
-    endif
+    !IF(taskid.eq.1)THEN
+
     !print*,'kinetic from main',kinetic,taskid
                             !EN UNA REGIÓ LxL AMB UNES CONDICIONS DE CONTORN PERIODIQUES
                             ! EN FUNCIO DE LES FORCES D'INTERACCIÓ S'ACTUALITZEN LES VELOCITATS
@@ -118,11 +114,11 @@ PROGRAM SEQUENTIAL_MD
   !VELOCITAT, POSICIONS, TEMPERATURES I
   !PRESSIÓ, EN UNITATS REDUÏDES I NO REDUÏDES, I LES POSICIONS DE LES PARTÍCULES
   !I LES ESCRIBIM EN UN FITXER OUTPUT, PER N TIME STEPS D'UN INTERVAL DE TEMPS
-  DO k=1,3
-        CALL MPI_BCAST(v(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
-        CALL MPI_BCAST(r(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
-        CALL MPI_BCAST(F(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
-  END DO
+  !DO k=1,3
+        !CALL MPI_BCAST(v(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
+        !CALL MPI_BCAST(r(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
+        !CALL MPI_BCAST(F(1:n_particles,k),n_particles,MPI_DOUBLE_PRECISION, 0,MPI_COMM_WORLD,ierror)
+  !END DO
   !print*,n_verlet
 
 !#############################################################!
