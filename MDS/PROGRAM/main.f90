@@ -1,3 +1,5 @@
+!GRUP I: Àlex, Oriol, Laia, Sílvia i Elena
+
 PROGRAM SEQUENTIAL_MD
   !Cridem els mòduls que necessitarem:
   use READ_DATA
