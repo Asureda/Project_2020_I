@@ -1,5 +1,12 @@
+!GRUP I: Àlex, Oriol, Laia, Sílvia i Elena
+
 MODULE READ_DATA
+
+!OBJECTIU: Aquest mòdul, servirà per llegir i definir quin tipus de varibles tindrem a la simulació:
+! Les hem separat segons el fitxer d'on provenen
+
     IMPLICIT NONE
+
     ! Variables del fitxer parameters.dat
     INTEGER :: n_particles
     REAL*8 :: density,t_b,h,sigma,epsilon,mass,T_ini, T_therm, dx_radial
@@ -18,8 +25,10 @@ MODULE READ_DATA
     REAL*8 :: L,a,T_a,kinetic,potential,pressure
     CONTAINS
 
-    ! Subrutina per definir variables globals les quals s'usaran en els diferents moduls
     SUBROUTINE READ_ALL_DATA()
+    
+        !OBJECTIU: Llegir els fitxers d'inputs i assignar a variables que utilitzarem durant tot el procés.
+        
         IMPLICIT NONE
         !---------------------------------------------------
         !      LLEGIM EL FITXER DELS PARAMETRES
@@ -50,35 +59,49 @@ MODULE READ_DATA
         READ(12,*)is_time_evol
         READ(12,*)n_meas_time_ev
         CLOSE(12)
-
+        !--------------------------------------------------
+        !      LLEGIM EL FITXER DE CONSTANTS
+        !--------------------------------------------------
         OPEN(13,FILE='constants.dat',status='OLD')
         READ(13,*)k_b
         READ(13,*)n_avog
         CLOSE(13)
     END SUBROUTINE
 
-    ! Funcio que calcula altres variables globals les quals no es llegeixen de cap fitxer
     SUBROUTINE OTHER_GLOBAL_VARS()
+    
+    !OBJECTIU: Subrutina que calcula altres variables globals, les quals no es llegeixen de cap fitxer
+    
         IMPLICIT NONE
-        L=((n_particles*1d0)/density)**(1d0/3d0)     ! Longitud de la caixa de simulacio
-        M=nint(((n_particles*1d0)/4d0)**(1d0/3d0))   ! Numero de nodes en cada dimensio
+        
+        L=((n_particles*1d0)/density)**(1d0/3d0)     ! Longitud de la caixa de simulació
+        M=nint(((n_particles*1d0)/4d0)**(1d0/3d0))   ! Número de nodes en cada dimensió
         a=L/(M*1d0)                                  ! Aresta de cada cel·la unitat
         n_radial=int(0.5*L/dx_radial)
         t_a=0d0
-        kinetic=0d0
-        potential=0d0
-        pressure=0d0
+        kinetic=0d0                                  ! Inicialitzem valors com l'energia cinètica,
+        potential=0d0                                ! l'energia potencial o
+        pressure=0d0                                 ! la pressió
     END SUBROUTINE
 
-    ! Funcio per calcular l'energia cinetica
     FUNCTION KINETIC_ENERGY(v)
+    
+        !OBJECTIU: Funció per calcular l'energia cinètica
+        
+        !INPUTS: matriu de velocitats
+        
+        !OUTPUTS: valor de l'energia cinètica
+        
         IMPLICIT NONE
+        
         INTEGER i
         REAL*8 :: v(:,:),KINETIC_ENERGY
+        
         KINETIC_ENERGY=0d0
         DO i=1,n_particles
             KINETIC_ENERGY=KINETIC_ENERGY+5d-1*(v(i,1)**2d0+v(i,2)**2d0+v(i,3)**2d0)
         END DO
+       
         RETURN
     END FUNCTION
 

@@ -1,19 +1,32 @@
+!GRUP I: Àlex, Oriol, Laia, Sílvia i Elena
 ! Modul del cutoff
 MODULE Interaction_Cutoff_Modul
+
 use READ_DATA
 use Lennard_Jones
 use PBC
+
 implicit none
+
 contains
 
 SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
-! Calcul de l'energia d'interaccio total donades una subrutina externa pel potencial
-! Lennard-Jones i per les condicions periodiques de contorn. Tambe calculem la pressio
+
+    ! OBJECTIU: Fer el càlcul de l'energia d'interacció total i les forces donades a  una subrutina 
+    !           externa pel potencial Lennard-Jones i per les condicions periodiques de contorn. 
+    !           Aquí, també calcularem la pressió.
+    
+    !INPUTS: matriu de posicions (r), valors de les forces (F), valor del cutoff, pot (energia potencial)
+    
+    !OUTPUTS: valors actualitzats de les forces (F), potential (resultat de l'energia potencial), pressió
+    
     IMPLICIT NONE
+    
     INTEGER :: i,j
     REAL*8 :: cutoff,pot
     REAL*8 :: dx,dy,dz,d,ff
     REAL*8, DIMENSION(:,:) :: r, F
+    
     F=0d0
     potential=0d0
     pressure=0.0
