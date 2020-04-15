@@ -1,9 +1,20 @@
-! Modul per calcular el potencial Lennard-Jones (en unitats reduides)
-MODULE Lennard_Jones
+!GRUP I: Àlex, Oriol, Laia, Sílvia i Elena
+module Lennard_Jones
+
 use READ_DATA
+
 implicit none
+
 contains
+
 SUBROUTINE L_J(d,ff,pot,cutoff)
+
+    !OBJECTIU: Fer el càlcul del potencial i les forces (en unitats reduïdes).
+    
+    !INPUTS: el valor del cutoff, les distàncies
+    
+    !OUTPUTS: l'energia potencial (pot), ff(forces)
+    
     IMPLICIT NONE
     REAL*8 d,cutoff,ff,pot
     ff=(48d0/d**14d0)-(24d0/d**8d0)             ! F = -grad(V)
