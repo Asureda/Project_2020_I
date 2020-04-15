@@ -1,3 +1,4 @@
+!GRUP I: Àlex, Oriol, Laia, Sílvia i Elena
 module Distribucio_Radial
 
 use READ_DATA
@@ -8,14 +9,22 @@ IMPLICIT NONE
 contains
 
     subroutine RAD_DIST_INTER(r,vec)
-    !Aquesta subrutina, ens permetrà calcular a partir dels diferencials de distància, el valor de la distribució radial
+    
+    !OBJECTIU: Aquesta subrutina, ens permetrà calcular a partir dels 
+    !          diferencials de distància, el valor de la distribució radial.
+    
+    !INPUTS: posicions
+    
+    !OUTPUTS: distribució_radial(vec)
+    
     IMPLICIT NONE
     INTEGER i,coef,j
     REAL*8 dist,vec(:), r(:,:),dx,dy,dz
     DO i=1,n_particles
         DO j=1,n_particles
             IF (i.ne.j) THEN
-                !Calculem el diferencial en l'espai de les tres dimensions sobre les que treballem
+                !Calculem el diferencial en l'espai de les tres dimensions sobre
+                ! les que treballem amb les condicions de contorn periòdiques:
                 dx=PBC1(r(j,1)-r(i,1),L)
                 dy=PBC1(r(j,2)-r(i,2),L)
                 dz=PBC1(r(j,3)-r(i,3),L)
@@ -30,8 +39,14 @@ contains
     end subroutine RAD_DIST_INTER
 
     subroutine RAD_DIST_FINAL(vec,n_gr_meas)
-    !Per tal de fer un càlcul correcte, s'han de fer un cúmul de g(r)
-    !Aquesta subrutina ens permet calcular el promig dels valors anteriors
+    
+    !OBJECTIU: per tal de fer un càlcul correcte, s'han de fer un cúmul de g(r)
+    !          i aquesta subrutina ens permet calcular el promig dels valors anteriors.
+    
+    !INPUTS: distribucio_radial (de la subrutina anterior) i número de mesures de la gdr (n_gr_meas)
+    
+    !OUTPUTS: distribucio_radial (vec)
+    
     IMPLICIT NONE
     INTEGER i,n_gr_meas
     REAL*8 vec(:),result(0:n_radial+1),aux
