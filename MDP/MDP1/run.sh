@@ -31,7 +31,7 @@ cd $tmp_folder/
 
 #Execute the progrm
 
-mpirun -np 4 main
+mpirun -np 16 main
 gnuplot gr.gnu
 gnuplot real.gnu
 gnuplot red.gnu

@@ -8,7 +8,7 @@ MODULE READ_DATA
     integer message
     integer stat(MPI_STATUS_SIZE)
   !  integer nworking_simple!, nworking_double
-    character(32) hostname
+    character(64) hostname
 
     integer, dimension(:,:), allocatable :: index_matrix!, double_matrix
     integer, dimension(:), allocatable :: desplac,num_send
