@@ -6,9 +6,7 @@ module parallel_routines
     SUBROUTINE simple_loop_matrix()
         IMPLICIT NONE
         integer :: i,j,a
-
         a=INT(REAL(n_particles)/REAL(numproc))
-        !print*,'particules',n_particles,'CPUs',numproc,'part/CPU',a
         allocate(index_matrix(numproc,2),desplac(numproc),num_send(numproc))
 
 
@@ -21,13 +19,16 @@ module parallel_routines
             end if
             END DO
 
-        DO i=1,numproc
-          if(i.eq.1)then
-            desplac(1)=0
-          else
-            desplac(i)=index_matrix(i-1,2)
-            end if
-            num_send(i)=index_matrix(i,2)-index_matrix(i,1)+1
-        end do
+            DO i=1,numproc
+              if(i.eq.1)then
+                desplac(i)=0
+              else
+                desplac(i)=index_matrix(i-1,2)
+                end if
+                num_send(i)=index_matrix(i,2)-index_matrix(i,1)+1
+            end do
+
+        !print*,'CPU',taskid+1,'nº particles', index_matrix(taskid+1,2)-index_matrix(taskid+1,1)+1
+        !print*,'CPU',taskid+1,'relative displacement', desplac(taskid+1)
     END SUBROUTINE
 END module
