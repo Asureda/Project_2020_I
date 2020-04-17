@@ -8,7 +8,7 @@ MODULE READ_DATA
     integer message
     integer stat(MPI_STATUS_SIZE)
   !  integer nworking_simple!, nworking_double
-    character(64) hostname
+    !character(64) hostname
 
     integer, dimension(:,:), allocatable :: index_matrix!, double_matrix
     integer, dimension(:), allocatable :: desplac,num_send
@@ -19,7 +19,7 @@ MODULE READ_DATA
     LOGICAL :: is_thermostat
 
     ! Variables del fitxer config.dat
-    INTEGER :: n_meas,n_meas_gr,n_meas_time_ev,n_melting
+    INTEGER :: n_meas,n_meas_gr,n_meas_time_ev,n_melting, n_sample
     REAL*8 :: T_therm_prov
     LOGICAL :: is_print_thermo,is_compute_gr,is_time_evol,paral_simple,paral_double
 

@@ -1,7 +1,7 @@
 256         # number of particles
 0.8         # density
-100        # final time of the simulation
-0.0005        # time step
+40         # final time of the simulation
+0.0008      # time step
 2.64         # sigma of the gas
 0.045439       # epsilon of the gas
 4.0026        # mass

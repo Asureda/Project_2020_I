@@ -13,7 +13,7 @@ MODULE ALLOCATE_VARS
         ALLOCATE(r(n_particles,3),v(n_particles,3),F(n_particles,3),g_r(0:n_radial+1))
         seed=1996
 
-        
+
         !dimensional factors
         temp_re=epsilon/k_B   !Kelvin
         energy_re=epsilon     !kJ/mol
@@ -25,7 +25,7 @@ MODULE ALLOCATE_VARS
         rho_re=mass*1d24/(sigma**3d0*n_avog)
 
         !verlet integration vars
-        n_verlet=int((t_b-t_a)/h)  !number of time inegration steps
+        n_verlet=int((t_b-t_a)/h)  !number of time integration steps
         t=t_a
         g_r=0d0
         n_gr_meas=0
