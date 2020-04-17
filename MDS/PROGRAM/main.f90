@@ -33,7 +33,7 @@ PROGRAM SEQUENTIAL_MD
 
   !Fem el melting, per tal de trencar l'estructura FCC creada inicialment, i aconseguir un fluid
   ! amb l'objectiu d'analitzar les seves característiques termodinàmiques i cinètiques.
-   DO i=1,n_melting
+   DO nste=1,n_melting
     call velo_verlet(r,v,F)
      call andersen(v,T_therm_prov)
    END DO
@@ -49,8 +49,8 @@ PROGRAM SEQUENTIAL_MD
   !Apliquem l'algorisme de Verlet, que serveix per integrar la quantitat de moviment
   ! amb el termòstat d'Andersen que ens permet aconseguir treballar a una temperatura
   ! constant a partir de les velocitats:
-  DO i=1,n_verlet
-    t=t_a+i*h
+  DO i=nstep,n_verlet
+    t=t_a+nstep*h
     call VELO_VERLET(r,v,F)
     if(is_thermostat.eqv..true.)THEN
       call andersen(v,T_therm)
