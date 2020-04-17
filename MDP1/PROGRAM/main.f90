@@ -36,7 +36,7 @@ PROGRAM SEQUENTIAL_MD
     call MPI_BCAST(v, n_particles*3, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
   ! END DO
 !if (taskid==0)then
-   DO i=1,n_melting
+   DO nstep=1,n_melting
     call velo_verlet(r,v,F)
     call andersen(v,T_therm_prov)
    END DO
@@ -53,8 +53,8 @@ PROGRAM SEQUENTIAL_MD
     print*, 'fitxer fet'
   end if
 
-  DO i=1,n_verlet
-    t=t_a+i*h
+  DO nstep=1,n_verlet
+    t=t_a+nstep*h
     call VELO_VERLET(r,v,F)
     if(is_thermostat.eqv..true.)THEN
        call andersen(v,T_therm)
