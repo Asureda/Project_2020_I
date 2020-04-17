@@ -7,7 +7,7 @@ INTEGER kk
 contains
 SUBROUTINE SAMPLES()
   if(taskid==0) then
-  if((mod(i,n_meas).eq.0).and.(is_print_thermo.eqv..true.))then
+  if((mod(nstep,n_meas).eq.0).and.(is_print_thermo.eqv..true.))then
     temp_instant=2d0*kinetic/(3d0*n_particles)
     pressure=(density*temp_instant+pressure/(2d0*3d0*L**3d0))
     !kinetic = kinetic/n_particles
@@ -22,7 +22,7 @@ SUBROUTINE SAMPLES()
 end if
 
 if (taskid==0) then
-  if((mod(i,n_meas_gr).eq.0).and.(is_compute_gr.eqv..true.))then
+  if((mod(nstep,n_meas_gr).eq.0).and.(is_compute_gr.eqv..true.))then
     call RAD_DIST_INTER(r,g_r) !càlcul g(r) a cada pas
     n_gr_meas=n_gr_meas+1
   endif
