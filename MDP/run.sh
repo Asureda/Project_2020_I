@@ -5,6 +5,7 @@ tmp_folder=$(date +'%d_%m_%Y_%H_%M_%S')
 # Creating the tmp file in PROGRM
 
 mkdir PROGRAM/$tmp_folder/
+mkdir OUTPUT/
 
 # Copy input parametters to tmp file
 rm PROGRAM/*.dat

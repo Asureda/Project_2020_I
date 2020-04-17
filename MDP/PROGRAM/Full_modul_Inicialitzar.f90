@@ -60,5 +60,6 @@ contains
     alpha=sqrt(3d0*n_particles*T/(2d0*KINETIC_LOC))
     v=alpha*v
     end subroutine Velo_Rescaling_mod
+    
 
 end module Inicialitzar

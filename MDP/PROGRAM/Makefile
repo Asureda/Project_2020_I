@@ -9,9 +9,9 @@ compf=mpif90
 TARGET=main
 
 # Optimitzador
-OPT=-O2 -g
+OPT=-O3 -g 
+# Flags-traceback -check all -fp-stack-check
 
-# Flags
 FLAGS=-Wall  -fbounds-check
 
 # Grafics d'energia, pressio, temperatura i funcio de distribució radial
