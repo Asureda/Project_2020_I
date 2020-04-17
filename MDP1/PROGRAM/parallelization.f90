@@ -22,7 +22,7 @@ module parallel_routines
             DO i=1,numproc
               if(i.eq.1)then
                 desplac(i)=0
-              else
+                else
                 desplac(i)=index_matrix(i-1,2)
                 end if
                 num_send(i)=index_matrix(i,2)-index_matrix(i,1)+1

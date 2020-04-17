@@ -26,26 +26,20 @@ PROGRAM SEQUENTIAL_MD
 
   call FCC_Initialize(r)
   call Uniform_velocity(v)
-  DO k= 1,3
-    call MPI_BCAST(r(:,k), n_particles, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
-    call MPI_BCAST(v(:,k), n_particles, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
-  END DO
+  ! DO k= 1,3
+    call MPI_BCAST(r, n_particles*3, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
+    call MPI_BCAST(v, n_particles*3, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
+  ! END DO
 
    call VELO_RESCALING_MOD(v,T_therm_prov)
-  DO k= 1,3
-    call MPI_BCAST(v(:,k), n_particles, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
-  END DO
+  ! DO k= 1,3
+    call MPI_BCAST(v, n_particles*3, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
+  ! END DO
 !if (taskid==0)then
    DO i=1,n_melting
     call velo_verlet(r,v,F)
     call andersen(v,T_therm_prov)
    END DO
-!end if
-!DO k= 1,3
-  ! call MPI_BCAST(r(:,k), n_particles, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
-  ! call MPI_BCAST(v(:,k), n_particles, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
-!END DO
-
 
   if (taskid==0) then
     open(41,file='kin_pot_red.dat')
@@ -54,8 +48,6 @@ PROGRAM SEQUENTIAL_MD
     open(44,file='kin_pot_real.dat')
     open(45,file='total_real.dat')
     open(46,file='temp_pres_real.dat')
-    ! open(51,file='thermodynamics_red.dat')
-    ! open(52,file='thermodynamics_real.dat')
     open(53,file='distrib_funct.dat')
     open(54,file='positions.xyz')
     print*, 'fitxer fet'
@@ -63,7 +55,6 @@ PROGRAM SEQUENTIAL_MD
 
   DO i=1,n_verlet
     t=t_a+i*h
-
     call VELO_VERLET(r,v,F)
     if(is_thermostat.eqv..true.)THEN
        call andersen(v,T_therm)
@@ -76,7 +67,6 @@ PROGRAM SEQUENTIAL_MD
     end if
     CALL SAMPLES()
   end do
-  print*,taskid, 'loop fet'
     CALL gdr()
   endtime = MPI_WTIME()
   IF (taskid==0) then
