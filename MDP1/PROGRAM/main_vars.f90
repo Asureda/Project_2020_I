@@ -1,7 +1,7 @@
 MODULE ALLOCATE_VARS
     USE READ_DATA
     IMPLICIT NONE
-    INTEGER seed,n_verlet,n_gr_meas,i
+    INTEGER seed,n_verlet,n_gr_meas,nstep
     REAL*8 time_re,energy_re,dist_re,temp_re,press_re,n_mols,total_mass,rho_re,t,temp_instant,cutoff_aux
     REAL*8,DIMENSION(:,:),ALLOCATABLE :: r, v, f
     REAL*8,DIMENSION(:),ALLOCATABLE :: g_r
