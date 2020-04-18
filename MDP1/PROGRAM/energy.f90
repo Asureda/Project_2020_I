@@ -17,8 +17,6 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
     potential=0d0
     pressure=0.0
     DO i=index_matrix(taskid+1,1), index_matrix(taskid+1,2), 1; DO j=1, n_particles, 1
-        !DO j=1,n_particles
-          !IF(j.ne.i) then
           if(i==j) cycle
             dx=PBC1(r(i,1)-r(j,1),L)
             dy=PBC1(r(i,2)-r(j,2),L)
@@ -35,6 +33,7 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
     END DO
     call MPI_REDUCE( potential, potential,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
     call MPI_REDUCE(pressure,pressure,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
+
     return
 END SUBROUTINE INTERACTION_CUTOFF
 

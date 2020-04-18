@@ -39,7 +39,7 @@ contains
     !Sempre es farà a una temperatura concreta
     INTEGER :: i,j,seed !,k
     REAL*8 :: v(:,:),vi,vtot
-    seed=13
+    !seed=13
     CALL RANDOM_SEED()
 
     if (taskid==0) then
@@ -54,9 +54,6 @@ contains
             v(n_particles,i)=-vtot
           END DO
     end if
-    ! DO k= 1,3
-    !   call MPI_BCAST(v(:,k), n_particles, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
-    ! END DO
     RETURN
     end subroutine Uniform_velocity
     subroutine Velo_Rescaling_mod(v,T)
@@ -69,9 +66,6 @@ contains
         alpha=sqrt(3d0*n_particles*T/(2d0*KINETIC_LOC))
         v=alpha*v
     end if
-    ! DO k= 1,3
-    !   call MPI_BCAST(v(:,k), n_particles, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
-    ! END DO
     end subroutine Velo_Rescaling_mod
 
 end module Inicialitzar

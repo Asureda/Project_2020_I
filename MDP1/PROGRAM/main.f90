@@ -17,7 +17,7 @@ PROGRAM SEQUENTIAL_MD
   starttime = MPI_WTIME()
   master = 0
 
-  call srand(seed)
+  !call srand(seed)
   call read_all_data()
   call other_global_vars()
   call INITIALIZE_VARS()
@@ -26,20 +26,15 @@ PROGRAM SEQUENTIAL_MD
 
   call FCC_Initialize(r)
   call Uniform_velocity(v)
-  ! DO k= 1,3
+  call VELO_RESCALING_MOD(v,T_therm_prov)
+
     call MPI_BCAST(r, n_particles*3, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
     call MPI_BCAST(v, n_particles*3, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
-  ! END DO
 
-   call VELO_RESCALING_MOD(v,T_therm_prov)
-  ! DO k= 1,3
-    call MPI_BCAST(v, n_particles*3, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
-  ! END DO
-!if (taskid==0)then
-   DO nstep=1,n_melting
-    call velo_verlet(r,v,F)
-    call andersen(v,T_therm_prov)
-   END DO
+    DO nstep=1,n_melting
+     call velo_verlet(r,v,F)
+     call andersen(v,T_therm_prov)
+    END DO
 
   if (taskid==0) then
     open(41,file='kin_pot_red.dat')
@@ -58,18 +53,13 @@ PROGRAM SEQUENTIAL_MD
     call VELO_VERLET(r,v,F)
     if(is_thermostat.eqv..true.)THEN
        call andersen(v,T_therm)
-    else
-      DO k=1,3
-        CALL MPI_GATHERV(v(index_matrix(taskid+1,1):index_matrix(taskid+1,2),k),&
-                        & (index_matrix(taskid+1,2)-index_matrix(taskid+1,1)+1),MPI_DOUBLE_PRECISION, &
-                        & v(:,k),num_send,desplac,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierror)
-      END DO
     end if
     CALL SAMPLES()
   end do
     CALL gdr()
   endtime = MPI_WTIME()
   IF (taskid==0) then
+    print*,'numproc',numproc
     print*,'time = ',endtime-starttime
     print*,'PROGRAM END'
   END IF

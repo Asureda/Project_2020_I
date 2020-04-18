@@ -1,7 +1,9 @@
 MODULE ALLOCATE_VARS
     USE READ_DATA
     IMPLICIT NONE
+
     INTEGER seed,n_verlet,n_gr_meas,nstep
+
     REAL*8 time_re,energy_re,dist_re,temp_re,press_re,n_mols,total_mass,rho_re,t,temp_instant,cutoff_aux
     REAL*8,DIMENSION(:,:),ALLOCATABLE :: r, v, f
     REAL*8,DIMENSION(:),ALLOCATABLE :: g_r
@@ -15,11 +17,11 @@ MODULE ALLOCATE_VARS
 
 
         !dimensional factors
-        temp_re=epsilon/k_B   !Kelvin
-        energy_re=epsilon     !kJ/mol
+        temp_re=epsi/k_B   !Kelvin
+        energy_re=epsi     !kJ/mol
         dist_re=sigma         !Angstroms
-        time_re=0.1*sqrt(mass*sigma**2d0/epsilon)  !Picoseconds
-        press_re=1d33*epsilon/(n_avog*sigma**3d0)  !Pascals
+        time_re=0.1*sqrt(mass*sigma**2d0/epsi)  !Picoseconds
+        press_re=1d33*epsi/(n_avog*sigma**3d0)  !Pascals
         n_mols=n_particles/n_avog
         total_mass=n_mols*mass
         rho_re=mass*1d24/(sigma**3d0*n_avog)

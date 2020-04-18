@@ -28,14 +28,6 @@ contains
             v(i,3)=temp1*sqrt(-2d0*log(n3))*cos(2d0*3.1415*n4)
         END IF
     END DO
-    DO k=1,3
-    ! CALL MPI_ALLGATHERV(v(index_matrix(taskid+1,1):index_matrix(taskid+1,2),k),&
-    !                     & (index_matrix(taskid+1,2)-index_matrix(taskid+1,1)+1),MPI_DOUBLE_PRECISION, &
-    !                     & v(:,k),num_send,desplac,MPI_DOUBLE_PRECISION,MPI_COMM_WORLD,ierror)
-    CALL MPI_GATHERV(v(index_matrix(taskid+1,1):index_matrix(taskid+1,2),k),&
-                        & (index_matrix(taskid+1,2)-index_matrix(taskid+1,1)+1),MPI_DOUBLE_PRECISION, &
-                        & v(:,k),num_send,desplac,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierror)
-    END DO
     end subroutine Andersen
 
 end module Andersen_modul
