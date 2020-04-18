@@ -6,6 +6,7 @@ IMPLICIT NONE
 INTEGER kk, ii
 contains
 SUBROUTINE SAMPLES()
+
   DO kk=1,3
    CALL MPI_GATHERV(v(index_matrix(taskid+1,1):index_matrix(taskid+1,2),kk),&
                         & (index_matrix(taskid+1,2)-index_matrix(taskid+1,1)+1),MPI_DOUBLE_PRECISION, &

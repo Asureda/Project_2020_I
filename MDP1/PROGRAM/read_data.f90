@@ -17,7 +17,7 @@ MODULE READ_DATA
     LOGICAL :: is_thermostat
 
     ! Variables del fitxer config.dat
-    INTEGER :: n_meas,n_meas_gr,n_meas_time_ev,n_melting, n_sample
+    INTEGER :: n_meas,n_meas_gr,n_meas_time_ev,n_melting
     REAL*8 :: T_therm_prov
     LOGICAL :: is_print_thermo,is_compute_gr,is_time_evol,paral_simple,paral_double
 
