@@ -7,15 +7,13 @@ MODULE READ_DATA
     integer reslen
     integer message
     integer stat(MPI_STATUS_SIZE)
-  !  integer nworking_simple!, nworking_double
-    !character(64) hostname
 
     integer, dimension(:,:), allocatable :: index_matrix!, double_matrix
     integer, dimension(:), allocatable :: desplac,num_send
 
     ! Variables del fitxer parameters.dat
     INTEGER :: n_particles
-    REAL*8 :: density,t_b,h,sigma,epsilon,mass,T_ini, T_therm, dx_radial
+    REAL*8 :: density,t_b,h,sigma,epsi,mass,T_ini, T_therm, dx_radial
     LOGICAL :: is_thermostat
 
     ! Variables del fitxer config.dat
@@ -43,7 +41,7 @@ MODULE READ_DATA
         READ(11,*)t_b
         READ(11,*)h
         READ(11,*)sigma
-        READ(11,*)epsilon
+        READ(11,*)epsi
         READ(11,*)mass
         READ(11,*)T_ini
         READ(11,*)is_thermostat
