@@ -10,14 +10,6 @@ module parallel_routines
         res=mod(n_particles,numproc)
         allocate(index_matrix(numproc,2),desplac(numproc),num_send(numproc))
 
-            ! DO i=1,numproc
-            !   index_matrix(i,1)=a*(i-1)+1
-            !   if ( i /= numproc) then
-            !   index_matrix(i,2)=i*a
-            !   else
-            !   index_matrix(numproc,2)=n_particles
-            ! end if
-            ! END DO
             DO i=1,numproc
               IF((i-1)<res)then
                 index_matrix(i,1)=(a+1)*(i-1)+1
