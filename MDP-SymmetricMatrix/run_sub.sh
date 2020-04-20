@@ -17,7 +17,7 @@ module load intel openmpi
 
 ##Execute file
 ##Getting the temporal file name
-tmp_folder=$(date +'%d_%m_%Y_%H_%M_%S')
+tmp_folder=$(date +'%Y_%m_%d_%H_%M_%S')
 
 ## Creating the tmp file in PROGRM
 
