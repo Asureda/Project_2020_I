@@ -173,10 +173,4 @@ MDP- Symetric Matrix
 - It is computed the direct and the symetric term. We loop over half of the matrix
 - Different distribution of the work
 ```
-MDP- Distributed Work
-```
-- Same number of interations for each patricle
-- It is computed the direct and the symetric term. We loop over half of the matrix
-- Every processator have the same work
-```
 
