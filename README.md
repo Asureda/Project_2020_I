@@ -126,8 +126,16 @@ Last moifyed:  NONE (version --)
 ## A1: Input parameters
 parametters.dat
 ```
-- 
--
+particles        # Number of particles (x^3 *4 ; with x natural and positive)
+density          # Density (reduced units)
+time             # Symulation time (reduced units)
+h                # Time step (reduced units)
+sigma            # Sigma of the gas (Angstroms)
+epsilon          # Epsilon of the gas (kJ/mol)
+mass             # Mass (g/mol)
+(boolean)        # To add a thermostat
+temperature      # If true, temperature of the thermostat (reduced units)
+dx               # Precision for the radial distribution function (reduced units)
 ```
 config.dat
 ```
