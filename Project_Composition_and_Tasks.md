@@ -9,13 +9,17 @@
 # Tasks
 
 * Input Files and Lecture
-  - Silvia (Changed to Oriol with MANAGING)
+  - Silvia and Oriol
+* Parallelization
+  - Oriol, Alexandre and Silvia
 * Main Program and Managing
-  - Oriol (Changed to Silvia, main program part)
+  - Oriol, Alexandre and Silvia
 * Initial position and velocity, Thermostat
   - Elena
 * Distribution function
-  - Elena
+  - Elena and Laia
+* Algorithm Forces
+  - Alexandre and Oriol
 * Integration
   - Alexandre, Laia
 * Boundary Conditions
