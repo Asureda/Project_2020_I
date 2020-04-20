@@ -6,11 +6,13 @@ IMPLICIT NONE
 INTEGER kk, ii
 contains
 SUBROUTINE SAMPLES()
+!Sharing the velocities of each worker to Master for each time step
   DO kk=1,3
    CALL MPI_GATHERV(v(index_matrix(taskid+1,1):index_matrix(taskid+1,2),kk),&
                         & (index_matrix(taskid+1,2)-index_matrix(taskid+1,1)+1),MPI_DOUBLE_PRECISION, &
                         & v(:,kk),num_send,desplac,MPI_DOUBLE_PRECISION,0,MPI_COMM_WORLD,ierror)
    END DO
+   ! Master worker calculates the final values of these magnitudes and their statistical treatment
    if(taskid==0) then
   if((mod(nstep,n_meas).eq.0).and.(is_print_thermo.eqv..true.))then
     DO ii = 1,n_particles
@@ -45,6 +47,7 @@ end if
 END SUBROUTINE SAMPLES
 
 SUBROUTINE gdr()
+! Calculation of the radial distribution function
   if (taskid==0) then
   if((is_compute_gr.eqv..true.))then
   call RAD_DIST_INTER(r,g_r)

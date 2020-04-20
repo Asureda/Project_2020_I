@@ -8,14 +8,13 @@ IMPLICIT NONE
 contains
 
     subroutine RAD_DIST_INTER(r,vec)
-    !Aquesta subrutina, ens permetrà calcular a partir dels diferencials de distància, el valor de la distribució radial
+    ! We calculate the radial distribution value from distance differentials
     IMPLICIT NONE
     INTEGER i,coef,j
     REAL*8 dist,vec(:), r(:,:),dx,dy,dz
     DO i=1,n_particles
         DO j=1,n_particles
             IF (i.ne.j) THEN
-                !Calculem el diferencial en l'espai de les tres dimensions sobre les que treballem
                 dx=PBC1(r(j,1)-r(i,1),L)
                 dy=PBC1(r(j,2)-r(i,2),L)
                 dz=PBC1(r(j,3)-r(i,3),L)
@@ -30,8 +29,8 @@ contains
     end subroutine RAD_DIST_INTER
 
     subroutine RAD_DIST_FINAL(vec,n_gr_meas)
-    !Per tal de fer un càlcul correcte, s'han de fer un cúmul de g(r)
-    !Aquesta subrutina ens permet calcular el promig dels valors anteriors
+    ! We must perform an accumulation of g(r) to carry out a correct calculation
+    ! We calculate the averages of the previous values
     IMPLICIT NONE
     INTEGER i,n_gr_meas
     REAL*8 vec(:),result(0:n_radial+1),aux

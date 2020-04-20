@@ -17,7 +17,7 @@ PROGRAM SEQUENTIAL_MD
   starttime = MPI_WTIME()
   master = 0
 
-  !call srand(seed)
+
   call read_all_data()
   call other_global_vars()
   call INITIALIZE_VARS()
@@ -28,6 +28,7 @@ PROGRAM SEQUENTIAL_MD
   call Uniform_velocity(v)
   call VELO_RESCALING_MOD(v,T_therm_prov)
 
+  !Sharing the initial state for all the workers
     call MPI_BCAST(r, n_particles*3, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
     call MPI_BCAST(v, n_particles*3, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
 
@@ -47,7 +48,7 @@ PROGRAM SEQUENTIAL_MD
     open(54,file='positions.xyz')
     print*, 'fitxer fet'
   end if
-
+!Loop over time
   DO nstep=1,n_verlet
     t=t_a+nstep*h
     call VELO_VERLET(r,v,F)

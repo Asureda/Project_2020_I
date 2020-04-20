@@ -1,4 +1,4 @@
-! Modul per les condicions periodiques de contorn
+! Periodic Boundary Conditions
 MODULE PBC
 use READ_DATA
 implicit none

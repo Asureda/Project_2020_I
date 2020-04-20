@@ -7,7 +7,8 @@ implicit none
 contains
 
 SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
-
+! Compute the forces, the potential energy of the
+! system and the pressure taking into account PBC
     IMPLICIT NONE
     INTEGER :: i,j
     REAL*8 :: cutoff,pot
@@ -33,7 +34,9 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
             pressure=pressure+(ff*dx**2d0+ff*dy**2d0+ff*dz**2d0)
         END DO
     END DO
+    !Compute the total interaction force for each particle
     call MPI_ALLREDUCE( F, F,n_particles*3,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierror)
+    ! Compute the sum for all the workers
     call MPI_REDUCE( potential, potential,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
     call MPI_REDUCE(pressure,pressure,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
 
