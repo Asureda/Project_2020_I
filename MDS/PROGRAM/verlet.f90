@@ -1,20 +1,34 @@
-! Modul de l'algoritme d'integració Verlet
-! Integració de les equacions de Newton mitjançant l'integració de Verlet
-! El modul consta de dos parts, en primer lloc el càlcul de les velocitats i posicions a partir de les configuracions inicials
-! En segon lloc calcular les noves forces a partir de les posicions anteriors i tot seguit fer el càlcul de les noves velocitats v(t+h) a partir de les
-! noves forces.
+!GRUP I: Àlex, Oriol, Laia, Sílvia i Elena
+
 MODULE Verlet_Algorithm
+
 use READ_DATA
 use Interaction_Cutoff_Modul
 use PBC
+
 implicit none
+
 contains
+
 SUBROUTINE VELO_VERLET(r,v,F)
+
+    ! Primer, farem una petita descripció sobre els passos que seguirem per tractar aquest algorisme:
+    ! Integració de les equacions de Newton mitjançant l'integració de Verlet
+    ! El modul consta de dos parts, en primer lloc el càlcul de les velocitats i posicions a partir de les configuracions inicials
+    ! En segon lloc calcular les noves forces a partir de les posicions anteriors i tot seguit fer el càlcul de les noves velocitats v(t+h) a partir de les
+    ! noves forces.
+
+    !OBJECTIU: Apliquem l'algorisme de Verlet, explicat anteriorment.
+    
+    !INPUTS: matriu de posicions(r), matriu de velocitats(v) i matriu de forces(F).
+    !        Les matrius inicials de posicions, velocitats i forces també les utilitzarem en aquesta subrutina. 
+    !        També, cridem a la subrutina que inlcourà el cutoff i ens definirà la PBC.
+    
+    !OUTPUTS: matriu de posicions(r), matriu de velocitats(v) i l'energia cinètica.
+
     INTEGER i
     REAL*8 r(:,:),v(:,:),r0(n_particles,3),v0(n_particles,3),f0(n_particles,3)
     REAL*8 F(:,:),cutoff
-    !REAL*8, DIMENSION(n_particles,3) :: tot_dis = 0
-    !REAL*8, DIMENSION(t_b) :: disp_sq
     cutoff=0.99*L*5d-1
     r0=r
     v0=v
@@ -22,10 +36,6 @@ SUBROUTINE VELO_VERLET(r,v,F)
     CALL INTERACTION_CUTOFF(r,F0,cutoff)
     DO i=1,n_particles
         r(i,:)=r0(i,:)+v0(i,:)*h+5d-1*F0(i,:)*h*h
-        !IF (t.le.t_b) then
-        !  tot_dis = tot_dis + v(i,:)*h
-        !  disp_sq(t)=sum(tot_dis*tot_dis)/(n_particles)
-        !end if
         r(i,1)=PBC2(r(i,1),L)
         r(i,2)=PBC2(r(i,2),L)
         r(i,3)=PBC2(r(i,3),L)

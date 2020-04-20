@@ -1,3 +1,4 @@
+!GRUP I: Àlex, Oriol, Laia, Sílvia i Elena
 module Andersen_modul
 
 use READ_DATA
@@ -7,6 +8,13 @@ IMPLICIT NONE
 contains
 
     subroutine Andersen(v,temp)
+    
+    !OBJECTIU: Fer un reescalat de les velocitats, conforme a la temperatura donada.
+    
+    !INPUTS: velocitats i temperatura
+    
+    !OUTPUTS: velocitats i temperatura
+    
     IMPLICIT NONE
     INTEGER i
     REAL*8 temp,nu,n1,n2,n3,n4
