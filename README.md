@@ -77,13 +77,14 @@ They should be similar except for a random factor
 
 
 ```
-- Inital FCC structure
-- Melting and equilibration
-- Velocity Verlet
-- Andersen Thermostat
-- Pair interaction with Lenard-Johnes
-- Periodic boundary conditions
-
+- Inital FCC structure in a cubic volume.
+- Uniform random initial velocities.
+- Melting and equilibration at a custmizable temperature.
+- Velocity Verlet algorithm to integrate the equations.
+- Andersen Thermostat to controll the bath temperature.
+- Pair interaction with Lenard-Johnes potential.
+- Periodic boundary conditions.
+- Observables results in real and reduced units.
 ```
 
 ## Technologies 🛠️
@@ -100,6 +101,7 @@ They should be similar except for a random factor
 ## Version 📌
 
 Outcome : 21 / 04 / 2020 (version 1.0)
+
 Last moifyed:  NONE (version --)
 
 ## Authors ✒️
@@ -110,9 +112,6 @@ Last moifyed:  NONE (version --)
 * **Oriol Cabanas**
 * **Silvia Àlvarez**
 
-## Licence 📄
-
-Blblablabla
 
 ## Acknowledgments 🎁
 
