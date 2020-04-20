@@ -157,7 +157,8 @@ constants.dat
 MDP-Double Work
 ```
 - Same numer of particles for each processator
-- For each particle is computed the interactions with the others. No symetric reduction is maid to comupute the half of the matrix.
+- For each particle is computed the interactions with the others. 
+     No symetric reduction is maid to comupute the half of the matrix.
 - Every processator have the same work
 ```
 MDP- Pair
