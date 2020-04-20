@@ -45,7 +45,7 @@ Makefile:  configure the compiler anf flags variables (mpifort by default)
 "run_sub.sh" (2): Configure the submit options ( BSC by default)
 ```
 
-## Execution ⚙️
+## Execution 🚀
 
 Sequential program
 ```
@@ -62,7 +62,7 @@ Paralel program (compututing cluster)
 (3) Collect the results in the OUTPUT folder
     The results folder name is the date-time whem the task was executed
 ```
-### Program-check 🔩
+### Program-check 🔎
 
 In the OUTPUT foler is provided a run_check subfolder with input configuration parameters and graphs. 
 Put the same paremeters in the INPUT files, run the program and compare the graphs. 
