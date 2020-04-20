@@ -2,7 +2,7 @@
 
 Computational progect to develop sequenctial and paralelized programs to symulate molecular dynamics. 
 
-## Fisrst steps 🚀
+## First steps 🚀
 Information to install and execute the programs
 
 
