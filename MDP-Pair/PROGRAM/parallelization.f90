@@ -11,7 +11,7 @@ module parallel_routines
         allocate(index_matrix(numproc,2),desplac(numproc),num_send(numproc))
         allocate(index_matrix2(numproc,2))
         allocate(pairindex((n_particles*(n_particles-1))/2,2))
-
+!Compute the number of particles assigned to each worker
             DO i=1,numproc
               IF((i-1)<res)then
                 index_matrix(i,1)=(a+1)*(i-1)+1
@@ -21,7 +21,7 @@ module parallel_routines
               index_matrix(i,2)=index_matrix(i,1)+a-1
               end if
             END DO
-
+!Compute de relative displacement and the number of particles for each worker
             DO i=1,numproc
               if(i.eq.1)then
                 desplac(i)=0
@@ -30,14 +30,7 @@ module parallel_routines
                 end if
                 num_send(i)=index_matrix(i,2)-index_matrix(i,1)+1
             end do
-        ! if(taskid==0) then
-        !   DO i =1,numproc
-        !     print*,index_matrix(i,:)
-        !   END DO
-        !   print*,desplac(:)
-        !   print*,num_send(:)
-        ! end if
-
+     
         !Define vector of pairs of particles
         ii = 1
         do i = 1,n_particles-1
@@ -48,6 +41,7 @@ module parallel_routines
         enddo
       b =  INT(REAL((n_particles*(n_particles-1))/2)/REAL(numproc))
       b_res=mod((n_particles*(n_particles-1))/2,numproc)
+      !Computing the number of pairs for each worker
       DO i=1,numproc
         IF((i-1)<b_res)then
           index_matrix2(i,1)=(b+1)*(i-1)+1
