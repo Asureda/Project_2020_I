@@ -8,6 +8,7 @@ IMPLICIT NONE
 contains
 
     subroutine Andersen(v,temp)
+    ! Andersen's thermostat subroutine: the sistem is in contact with a heat bath
     IMPLICIT NONE
     INTEGER i, k
     REAL*8 temp,nu,n1,n2,n3,n4, n5
@@ -18,7 +19,6 @@ contains
     DO i=index_matrix(taskid+1,1), index_matrix(taskid+1,2)
       call random_number(n5)
         IF(n5.lt.nu)THEN
-        !Iniciem aquest bucle per tal de fer una transformació de Box - Muller i obtenir una distribució normal de les velocitats.
             call random_number(n1)
             call random_number(n2)
             call random_number(n3)
