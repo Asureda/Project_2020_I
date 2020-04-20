@@ -8,7 +8,7 @@ Information to install and execute the programs
 
 ### Pre-requisites 📋
 
-Sequential ompilers:
+Sequential compilers:
 
 ```
 ifort (Default)
@@ -22,38 +22,66 @@ intel openmpi (Default)
 
 ### Instalation 🔧
 
-The programs are ready-to-use. The user have to download the repository in a local computer folder or in a 
+The programs are ready-to-use. The user have to download the repository in a local computer folder or computing cluster, configure the compiller and flags options in the Makefile
+
+Sequential program
+```
+Makefile:  configure compiller and flags variables (ifort by default)
 
 ```
-Da un ejemplo
+Paralel program (compututing cluster)
+```
+Makefile:  configure the compiler anf flags variables (mpifort by default)
+"run_sub.sh" (1): Check the execution order ( mpirun by default)
+"run_sub.sh" (2): Configure the submit options ( BSC by default)
 ```
 
-_Y repite_
+## Execution ⚙️
+
+Sequential program
+```
+(1) Configure the symulation parameters (INPUT folder)
+(2) Execute the "run.sh" script.
+(3) Collect the results in the OUTPUT folder
+    The results folder name is the date-time whem the task was executed
 
 ```
-hasta finalizar
+Paralel program (compututing cluster)
 ```
-
-_Finaliza con un ejemplo de cómo obtener datos del sistema o como usarlos para una pequeña demo_
-
-## Ejecutando las pruebas ⚙️
-
-_Explica como ejecutar las pruebas automatizadas para este sistema_
-
-### Analice las pruebas end-to-end 🔩
-
-_Explica que verifican estas pruebas y por qué_
-
+(1) Configure the symulation parameters (INPUT folder)
+(2) Execute the "run_sub.sh" script.
+(3) Collect the results in the OUTPUT folder
+    The results folder name is the date-time whem the task was executed
 ```
-Da un ejemplo
+### Program-check 🔩
+
+In the OUTPUT foler is provided a run_check subfolder with input configuration parameters and graphs. 
+Put the same paremeters in the INPUT files, run the program and compare the graphs. 
+They should be similar except for a random factor
+
+### About the different programs ⌨️
+
+Brief description of the main characteristics
+
+MDS
 ```
-
-### Y las pruebas de estilo de codificación ⌨️
-
-_Explica que verifican estas pruebas y por qué_
-
+blabla
 ```
-Da un ejemplo
+MDP1
+```
+blabla
+```
+MDP2
+```
+blabla
+```
+MDP3
+```
+blabla
+```
+MDP4
+```
+blabla
 ```
 
 ## Despliegue 📦
