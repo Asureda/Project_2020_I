@@ -8,6 +8,12 @@ Information to install and execute the programs
 
 ### Pre-requisites 📋
 
+Working environment:
+
+```
+Linux Shell and Bash
+```
+
 Sequential compilers:
 
 ```
@@ -84,51 +90,77 @@ MDP4
 blabla
 ```
 
-## Despliegue 📦
+## Program scripts 🛠️
 
-_Agrega notas adicionales sobre como hacer deploy_
+```
+- Fortran
+- Open MPI subrouines
+- Random numbers: CALL RANDOM_NUMBER(x) (no explicit seed)
+- GNU Plot
+- Bash shell scripts
 
-## Construido con 🛠️
+## Version 📌
 
-_Menciona las herramientas que utilizaste para crear tu proyecto_
+Outcome : 21 / 04 / 2020 (version 1.0)
+Last moifyed:  NONE (version --)
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - El framework web usado
-* [Maven](https://maven.apache.org/) - Manejador de dependencias
-* [ROME](https://rometools.github.io/rome/) - Usado para generar RSS
+## Authors ✒️
 
-## Contribuyendo 🖇️
+* **Alexandre Sureda**
+* **Elena Ricart**
+* **Laia Navarro**
+* **Oriol Cabanas**
+* **Silvia Àlvarez**
 
-Por favor lee el [CONTRIBUTING.md](https://gist.github.com/villanuevand/xxxxxx) para detalles de nuestro código de conducta, y el proceso para enviarnos pull requests.
+## Licence 📄
 
-## Wiki 📖
+Blblablabla
 
-Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra [Wiki](https://github.com/tu/proyecto/wiki)
-
-## Versionado 📌
-
-Usamos [SemVer](http://semver.org/) para el versionado. Para todas las versiones disponibles, mira los [tags en este repositorio](https://github.com/tu/proyecto/tags).
-
-## Autores ✒️
-
-_Menciona a todos aquellos que ayudaron a levantar el proyecto desde sus inicios_
-
-* **Andrés Villanueva** - *Trabajo Inicial* - [villanuevand](https://github.com/villanuevand)
-* **Fulanito Detal** - *Documentación* - [fulanitodetal](#fulanito-de-tal)
-
-También puedes mirar la lista de todos los [contribuyentes](https://github.com/your/project/contributors) quíenes han participado en este proyecto. 
-
-## Licencia 📄
-
-Este proyecto está bajo la Licencia (Tu Licencia) - mira el archivo [LICENSE.md](LICENSE.md) para detalles
-
-## Expresiones de Gratitud 🎁
+## Acknowledgments 🎁
 
 * Comenta a otros sobre este proyecto 📢
 * Invita una cerveza 🍺 o un café ☕ a alguien del equipo. 
 * Da las gracias públicamente 🤓.
 * etc.
 
+# Appendix
+* Input parameters
+* Speedup and runnung time recomendations
+## A1: Input parameters
+parametters.dat
+```
+- 
+-
+```
+config.dat
+```
+- 
+-
+```
+constants.dat
+```
+- 
+-
+```
+## A2: Speedup and runnung time recomendations
+MDP-Double Work
+```
+- 
+-
+```
+MDP-
+```
+- 
+-
+```
+MDP-
+```
+- 
+-
+```
+MDP-
+```
+- 
+-
+```
 
-
----
-⌨️ con ❤️ por [Villanuevand](https://github.com/Villanuevand) 😊
