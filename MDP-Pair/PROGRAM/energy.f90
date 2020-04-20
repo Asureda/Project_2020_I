@@ -7,7 +7,8 @@ implicit none
 contains
 
 SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
-
+! Compute the forces, the potential energy of the
+! system and the pressure taking into account PBC
     IMPLICIT NONE
     INTEGER :: i,j,par
     REAL*8 :: cutoff,pot
@@ -19,7 +20,7 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
     !Symmetric Matrix Energy
     DO par=index_matrix2(taskid+1,1), index_matrix2(taskid+1,2)
       i=pairindex(par,1) !Particle i on the interaction
-      j=pairindex(par,2)
+      j=pairindex(par,2) !Particle j on the interaction
             dx=PBC1(r(i,1)-r(j,1),L)
             dy=PBC1(r(i,2)-r(j,2),L)
             dz=PBC1(r(i,3)-r(j,3),L)
@@ -35,7 +36,9 @@ SUBROUTINE INTERACTION_CUTOFF(r,F,cutoff)
             pressure=pressure+(ff*dx**2d0+ff*dy**2d0+ff*dz**2d0)
 
     END DO
+    !Compute the total interaction force for each particle
     call MPI_ALLREDUCE( F, F,n_particles*3,MPI_DOUBLE_PRECISION,MPI_SUM,MPI_COMM_WORLD,ierror)
+    ! Compute the sum for all the workers
     call MPI_REDUCE( potential, potential,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
     call MPI_REDUCE(pressure,pressure,1,MPI_DOUBLE_PRECISION,MPI_SUM,0,MPI_COMM_WORLD,ierror)
 
