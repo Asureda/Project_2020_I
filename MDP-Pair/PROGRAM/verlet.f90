@@ -6,6 +6,8 @@ use parallel_routines
 implicit none
 contains
 SUBROUTINE VELO_VERLET(r,v,F)
+! We integrate the Newton's equations with the Velocity Verlet algorithm
+ ! We obtain new positions, velocities and the forces
     INTEGER i, k
     REAL*8 r(:,:),v(:,:),r0(n_particles,3),v0(n_particles,3),f0(n_particles,3)
     REAL*8 F(:,:),cutoff
@@ -20,6 +22,7 @@ SUBROUTINE VELO_VERLET(r,v,F)
         r(i,2)=PBC2(r(i,2),L)
         r(i,3)=PBC2(r(i,3),L)
     END DO
+    !Sharing the particle positions for all the workers to compute the force
     DO k=1,3
     CALL MPI_ALLGATHERV(r(index_matrix(taskid+1,1):index_matrix(taskid+1,2),k),&
                         & (index_matrix(taskid+1,2)-index_matrix(taskid+1,1)+1),MPI_DOUBLE_PRECISION, &
