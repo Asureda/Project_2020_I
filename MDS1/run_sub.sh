@@ -13,7 +13,7 @@
 #BSUB -W 210
 ##BSUB -R "span[ptile=5]"
 module purge
-module load intel openmpi
+module load intel/16.0.3
 
 ##Execute file
 ##Getting the temporal file name
@@ -47,7 +47,7 @@ cp *.gnu $tmp_folder/
 cd $tmp_folder/
 
 ##Execute the progrm
-mpirun main > log.dat
+./main > log.dat
 gnuplot gr.gnu
 gnuplot real.gnu
 gnuplot red.gnu

@@ -1,19 +1,6 @@
-##---------------------------------------------------
-##     COMMAND TO SEND JOB
-##   $ bsub < run_sub.sh
-##---------------------------------------------------
-##   RUNNING TASKS
-##   $ bjobs
 #!/bin/bash
-#BSUB -n 200
-#BSUB -J symm2
-#BSUB -o %symm2.out
-#BSUB -e %symm2.err
-#BSUB -q training
-#BSUB -W 210
-##BSUB -R "span[ptile=5]"
 module purge
-module load intel openmpi
+module load intel/16.0.3
 
 ##Execute file
 ##Getting the temporal file name
@@ -47,7 +34,7 @@ cp *.gnu $tmp_folder/
 cd $tmp_folder/
 
 ##Execute the progrm
-mpirun main > log.dat
+./main > log.dat
 gnuplot gr.gnu
 gnuplot real.gnu
 gnuplot red.gnu
