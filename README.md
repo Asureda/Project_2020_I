@@ -5,7 +5,7 @@ Lennard-Jones potential with parir interactions.
 Computational progect to develop sequenctial and paralelized programs to symulate molecular dynamics. Ready to compute the energies, temperature, pressure and radial distribution function in real and reduced units. For an N patricles system (compatible with FCC structure) the integration is done with the Velocity Verlet algorigthm. The program also come with an optional Andersen thermostat.
 Also, pair interactions with Lennard-Johnes potential and periodic boundary conditions are included
 
-## First steps 🚀
+## First steps 🚀💡💾🧱🔑
 Information to install and execute the programs
 
 
