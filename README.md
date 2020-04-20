@@ -139,13 +139,19 @@ dx               # Precision for the radial distribution function (reduced units
 ```
 config.dat
 ```
-- 
--
+temperature      # Temperature of the initial melting (reduced units)
+iterations       # Melting Velo Verlet Intagration steps
+(boolean)        # Print thermodynamic magnitudes
+iterations       # Delta iterations to measure thermodynamic magnitudes
+(boolean)        # Compute the radial distribution function
+iterations       # Delta iterations to compute the Rad. Dist. Func
+(boolean)        # Time-positions of the particles (.xyz file)
+iterations       # Delta iterations to save the positions
 ```
 constants.dat
 ```
-- 
--
+0.008314462      # Boltzman constant in kJ/mol.K
+6.022d23         # Avogadro number
 ```
 ## A2: Speedup and runnung time recomendations
 MDP-Double Work
