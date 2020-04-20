@@ -28,7 +28,7 @@ backup:
 
 
 ## clean_exe : regla per fer un clean nomes dels objectes executables
-.PHONY : clean_exe
-clean_exe:
+.PHONY : clean
+clean:
 	@echo Removing compiled objects only
 	rm *.o *.mod
