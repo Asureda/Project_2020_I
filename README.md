@@ -1,6 +1,9 @@
 # Molecular Dynamics Symulations
 
-Computational progect to develop sequenctial and paralelized programs to symulate molecular dynamics. 
+Lennard-Jones potential with parir interactions.
+
+Computational progect to develop sequenctial and paralelized programs to symulate molecular dynamics. Ready to compute the energies, temperature, pressure and radial distribution function in real and reduced units. For an N patricles system (compatible with FCC structure) the integration is done with the Velocity Verlet algorigthm. The program also come with an optional Andersen thermostat.
+Also, pair interactions with Lennard-Johnes potential and periodic boundary conditions are included
 
 ## First steps 🚀
 Information to install and execute the programs
@@ -65,29 +68,17 @@ In the OUTPUT foler is provided a run_check subfolder with input configuration p
 Put the same paremeters in the INPUT files, run the program and compare the graphs. 
 They should be similar except for a random factor
 
-### About the different programs ⌨️
+### Main theoretical characterisitics ⌨️
 
-Brief description of the main characteristics
 
-MDS
 ```
-blabla
-```
-MDP1
-```
-blabla
-```
-MDP2
-```
-blabla
-```
-MDP3
-```
-blabla
-```
-MDP4
-```
-blabla
+- Inital FCC structure
+- Melting and equilibration
+- Velocity Verlet
+- Andersen Thermostat
+- Pair interaction with Lenard-Johnes
+- Periodic boundary conditions
+
 ```
 
 ## Technologies 🛠️
