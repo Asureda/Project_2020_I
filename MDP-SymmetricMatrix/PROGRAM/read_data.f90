@@ -44,7 +44,6 @@ MODULE READ_DATA
         READ(11,*)sigma
         READ(11,*)epsi
         READ(11,*)mass
-        READ(11,*)T_ini
         READ(11,*)is_thermostat
         READ(11,*)T_therm
         READ(11,*)dx_radial
