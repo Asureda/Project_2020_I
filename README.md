@@ -148,17 +148,17 @@ MDP-Double Work
 - 
 -
 ```
-MDP-
+MDP- Pair
 ```
 - 
 -
 ```
-MDP-
+MDP- Symetric Matrix
 ```
 - 
 -
 ```
-MDP-
+MDP- Distributed Work
 ```
 - 
 -
