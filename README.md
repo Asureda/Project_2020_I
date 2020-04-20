@@ -1,10 +1,13 @@
 # Molecular Dynamics Symulations
 
 * Motivation
+
 Master's computational progect to learn the basic knowledege of parallel computing. We develop many programs where we basically change the way double loops are made. Also, we check the optimization chacteristics for each one. The execution was made at the BSC Mare Nostrum where large number of CPUs wherw used.
 * The system
+
 Van der Waals gas with pair Lenard-Johnes interactions. By setting the number of particles and density, the program fills a cubic volume with an FCC structure and periodic boundary conditions.
 * Molecular dynamics
+
 We use the Velocity Verlet algorithm to integrate the equations and optionaly set and Andersen thermostat.
 
 ## First steps 💡
