@@ -2,7 +2,7 @@
 
 Computational progect to develop sequenctial and paralelized programs to symulate molecular dynamics. 
 
-## Fisrst steps 🚀
+## First steps 🚀
 Information to install and execute the programs
 
 
@@ -90,7 +90,7 @@ MDP4
 blabla
 ```
 
-## Program scripts 🛠️
+## Technologies 🛠️
 
 ```
 - Fortran
@@ -98,6 +98,8 @@ blabla
 - Random numbers: CALL RANDOM_NUMBER(x) (no explicit seed)
 - GNU Plot
 - Bash shell scripts
+- Computing Cluster
+```
 
 ## Version 📌
 
@@ -148,17 +150,17 @@ MDP-Double Work
 - 
 -
 ```
-MDP-
+MDP- Pair
 ```
 - 
 -
 ```
-MDP-
+MDP- Symetric Matrix
 ```
 - 
 -
 ```
-MDP-
+MDP- Distributed Work
 ```
 - 
 -
