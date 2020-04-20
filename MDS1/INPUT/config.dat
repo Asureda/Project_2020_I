@@ -1,4 +1,4 @@
-100         # Melting and termalizing temperature
+100         # Melting and termalizing temperature (reduced units)
 100         # Melting Velo Verlet Intagration steps
 .FALSE.     # Print thermodynamic magnitudes
 100         # Delta iterations to measure thermodynamic magnitudes
