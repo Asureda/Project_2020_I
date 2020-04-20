@@ -98,6 +98,7 @@ blabla
 - Random numbers: CALL RANDOM_NUMBER(x) (no explicit seed)
 - GNU Plot
 - Bash shell scripts
+```
 
 ## Version 📌
 
