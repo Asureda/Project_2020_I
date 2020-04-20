@@ -74,9 +74,9 @@ MODULE READ_DATA
     ! We calculate some other global variables useful for the calculations
     SUBROUTINE OTHER_GLOBAL_VARS()
         IMPLICIT NONE
-        L=((n_particles*1d0)/density)**(1d0/3d0)     ! Longitud de la caixa de simulacio
-        M=nint(((n_particles*1d0)/4d0)**(1d0/3d0))   ! Numero de nodes en cada dimensio
-        a=L/(M*1d0)                                  ! Aresta de cada cel·la unitat
+        L=((n_particles*1d0)/density)**(1d0/3d0)     
+        M=nint(((n_particles*1d0)/4d0)**(1d0/3d0))   
+        a=L/(M*1d0)                                  
         n_radial=int(0.5*L/dx_radial)
         t_a=0d0
         kinetic=0d0
