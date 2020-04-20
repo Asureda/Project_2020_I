@@ -3,8 +3,8 @@
 1.0          # Symulation time (reduced units)
 0.0001       # Time step (reduced units)
 2.64         # Sigma of the gas ()
-0.045439     # Epsilon of the gas
-4.0026       # Mass
+0.045439     # Epsilon of the gas ()
+4.0026       # Mass ()
 .TRUE.       # To add a thermostat
 54.65        # If true, temperature of the thermostat (reduced units)
 0.01         # Precision for the radial distribution function (reduced units)
