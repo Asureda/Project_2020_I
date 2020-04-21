@@ -11,7 +11,7 @@
 #BSUB -e %symm2.err
 #BSUB -q training
 #BSUB -W 210
-##BSUB -R "span[ptile=5]"
+
 module purge
 module load intel/16.0.3
 
