@@ -50,6 +50,9 @@ Paralel program (compututing cluster)
 Makefile:  configure the compiler anf flags variables (mpifort by default)
 "run_sub.sh" (1): Check the execution order ( mpirun by default)
 "run_sub.sh" (2): Configure the submit options ( BSC by default)
+"run.sh" (1): Check Makefile flags for ifort or gfortran.
+"run.sh" (2): Configure "run.sh" number of cores.
+
 ```
 
 ## Execution 🚀
