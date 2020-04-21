@@ -6,9 +6,9 @@
 ##   $ bjobs
 #!/bin/bash
 #BSUB -n 1
-#BSUB -J symm2
-#BSUB -o %symm2.out
-#BSUB -e %symm2.err
+#BSUB -J sequential
+#BSUB -o %sequential.out
+#BSUB -e %sequential.err
 #BSUB -q training
 #BSUB -W 210
 
