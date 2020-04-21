@@ -2,18 +2,24 @@
 
 * Motivation
 
-Master's computational project to learn the basic knowledege of parallel computing applied to molecular dynamics. We develop programs where the tasks of each loop are distributed in different processors. Also, we check the optimization characteristics for each one. The execution was made at the BSC Mare Nostrum where large number of CPUs where used and we worked almost with 400 processors. Another objective of this project is analysing the speed-up and comparing time execution with different number of particles in sequential and parallel program.
+Master's computational project to learn the basic knowledege of parallel computing applied to molecular dynamics. 
+The main objectives of this project are:
+- Develop a molecular dynamics program.
+- Once the sequential program is done, develop programs where the tasks of each loop are distributed in different processors and check the optimization characteristics for each one. 
+- Analyze the speed-up and compare time execution with different number of particles in parallel program.
+The execution has been perdormed at the BSC Mare Nostrum where large number of CPUs where used; we worked almost with 400 processors.
 
 * The system
 
-We work with a Van der Waals gas, concretly helium gas, with pair Lenard-Johnes interactions. We consider a system of N particles in a canonical ensemble (NVT ensemble). It lets us change the number of particles, density and diferent steps used during the simulation. Firstly, the system has a FCC structure and it is under periodic bounday conditions, but after a melting process, it becomes a fluid. In this point, the system starts to be studied. The kinetics and thermodynamic parameters are analysed.
+We work with a Van der Waals gas, specifically helium gas, described by Lennard-Jones potential model to approach the interactions between pairs of particles. We consider a system of N particles in a canonical ensemble (NVT ensemble) under periodic boundary conditions.
+First, we create a FCC lattice taking care that there are no overlaps between particles. At this point, we can study the molecular dynamics of interest.
 
 * Molecular dynamics
 
-We use the Velocity Verlet algorithm to integrate the equations and set if the user neeeds, switch on the Andersen thermostat. During the simulation with this algorithms, we recalculate the positions and the velocities of the system so many times. If we are working with a heat bath, the expected results are the constant temperature during the simulation as same as the total energy, while the kinetic and potential energy are going to fluctuate.
+The integrator used to solve the Newton’s equations of motion is the velocity Verlet. The user can choose whether the system is in contact with a heat bath by activating the Andersen thermostat or not. During the simulation, we calculate the positions and the velocities of the system many times, obtaining its evolution.
 
 ## First steps 💡
-Information to install and execute the programs
+Information to install and execute the programs.
 
 ### Pre-requisites 📋
 
@@ -35,16 +41,16 @@ Parallel compilers:
 intel openmpi (Default)
 ```
 
-### Instalation 🔧
+### Installation 🔧
 
-The programs are ready-to-use. The user have to download the repository in a local computer folder or computing cluster, configure the compiler and flags options in the Makefile
+The programs are ready-to-use. The user has to download the repository in a local computer folder or computing cluster and configure the compiler and flags options in the Makefile.
 
 Sequential program
 ```
 Makefile:  configure compiler and flags variables (ifort by default)
 
 ```
-Paralel program (compututing cluster)
+Parallel program (compututing cluster)
 ```
 Makefile:  configure the compiler and flags variables (mpifort by default)
 "run_sub.sh" (1): Check the execution order ( mpirun by default)
@@ -64,7 +70,7 @@ Sequential program
     The results folder name is the date-time when the task was submitted.
 
 ```
-Paralel program (compututing cluster)
+Parallel program (compututing cluster)
 ```
 (1) Configure the symulation parameters (INPUT folder)
 (2) Execute the "run_sub.sh" script.
@@ -74,15 +80,13 @@ Paralel program (compututing cluster)
 ### Program-check 🔎
 
 In the OUTPUT foler is provided a run_check subfolder with input configuration parameters and graphs. 
-Put the same parameters in the INPUT files, run the program and compare the graphs. 
-They should be similar except for a random factor
+Put the same parameters in the INPUT files, run the program and compare the graphs; they should be similar except for a random factor.
 
 ### Main theoretical characteristics ⌨️
 
-
 ```
-- Inital FCC structure in a cubic volume.
-- Uniform random initial velocities.
+- Initial FCC structure in a cubic volume.
+- Uniform distribution of initial velocities.
 - Melting and equilibration at a customizable temperature.
 - Velocity Verlet algorithm to integrate the equations.
 - Andersen Thermostat to control the bath temperature.
@@ -95,9 +99,9 @@ They should be similar except for a random factor
 
 ```
 - Fortran
-- Open MPI subrouines
+- Open MPI subroutines
 - Random numbers: CALL RANDOM_NUMBER(x) (no explicit seed)
-- GNU Plot
+- Gnuplot
 - Bash shell scripts
 - Computing Cluster
 ```
@@ -119,20 +123,18 @@ Last moifyed:  NONE (version --)
 
 ## Acknowledgments 🎁
 
-* Comenta a otros sobre este proyecto 📢
-* Invita una cerveza 🍺 o un café ☕ a alguien del equipo. 
-* Da las gracias públicamente 🤓.
-* etc.
+To Sergio Madurga, Romualdo Pastor and Juan Torras for guiding and helping us develop this project.
+To Barcelona Supercomputing Center-Centro Nacional de Supercomputación (BSC-CNS) for allowing us to perform calculations with their platforms.
 
 # Appendix
 * Input parameters
-* Speedup and runnung time recomendations
+* Speed up and runnung time recomendations
 ## A1: Input parameters
-parametters.dat
+parameters.dat
 ```
 particles        # Number of particles (x^3 *4 ; with x natural and positive)
 density          # Density (reduced units)
-time             # Symulation time (reduced units)
+time             # Simulation time (reduced units)
 h                # Time step (reduced units)
 sigma            # Sigma of the gas (Angstroms)
 epsilon          # Epsilon of the gas (kJ/mol)
@@ -144,37 +146,37 @@ dx               # Precision for the radial distribution function (reduced units
 config.dat
 ```
 temperature      # Temperature of the initial melting (reduced units)
-iterations       # Melting Velo Verlet Intagration steps
+iterations       # Melting Velo Verlet Integration steps
 (boolean)        # Print thermodynamic magnitudes
 iterations       # Delta iterations to measure thermodynamic magnitudes
 (boolean)        # Compute the radial distribution function
-iterations       # Delta iterations to compute the Rad. Dist. Func
+iterations       # Delta iterations to compute the Rad. Dist. Func.
 (boolean)        # Time-positions of the particles (.xyz file)
 iterations       # Delta iterations to save the positions
 ```
 constants.dat
 ```
-0.008314462      # Boltzman constant in kJ/mol.K
+0.008314462      # Boltzman constant in kJ/molK
 6.022d23         # Avogadro number
 ```
-## A2: Speedup and runnung time recomendations
+## A2: Speed up and running time recomendations
 MDP-Double Work
 ```
-- Same numer of particles for each processator
+- Same number of particles for each processor.
 - For each particle is computed the interactions with the others. 
-     No symetric reduction is maid to comupute the half of the matrix.
-- Every processator have the same work
+     No symetric reduction is maid to compute the half of the matrix.
+- Every processor has the same work.
 ```
 MDP- Pair
 ```
-- Same number of interactions for each patricle
-- It is computed the direct and the symetric term. We loop over half of the matrix
-- Every processator have the same work
+- Same number of interactions for each patricle.
+- It is computed the direct and the symetric term. We loop over half of the matrix.
+- Every processor has the same work.
 ```
 MDP- Symetric Matrix
 ```
-- Same numer of particles for each processator
-- It is computed the direct and the symetric term. We loop over half of the matrix
-- Different distribution of the work
+- Same number of particles for each processor.
+- It is computed the direct and the symetric term. We loop over half of the matrix.
+- Different distribution of work between processors.
 ```
 
