@@ -21,12 +21,12 @@ SUBROUTINE SAMPLES()
     kinetic = kinetic/n_particles
     potential = potential/n_particles
     temp_instant=2d0*kinetic/(3d0)
-    pressure=(density*temp_instant+pressure/(2d0*3d0*L**3d0))
-          write(41,*) t,kinetic,potential/(2d0)
-          write(42,*) t,kinetic+potential/(2d0)
+    pressure=(density*temp_instant+pressure/(3d0*L**3d0))
+          write(41,*) t,kinetic,potential
+          write(42,*) t,kinetic+potential
           write(43,*) t,temp_instant,pressure
-          write(44,*) t*time_re,kinetic*energy_re,potential/(2d0)*energy_re
-          write(45,*) t*time_re,(kinetic+potential/(2d0))*energy_re
+          write(44,*) t*time_re,kinetic*energy_re,potential)*energy_re
+          write(45,*) t*time_re,(kinetic+potential)*energy_re
           write(46,*) t*time_re,temp_instant*temp_re,pressure*press_re
   endif
 end if
