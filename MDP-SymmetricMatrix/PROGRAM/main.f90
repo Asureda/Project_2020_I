@@ -11,6 +11,9 @@ PROGRAM SEQUENTIAL_MD
   IMPLICIT NONE
   integer master, k
   REAL*8 starttime, endtime
+!##########################
+! INITIAL CONFIGURATION
+!#########################
   call MPI_INIT(ierror)
   call MPI_COMM_RANK(MPI_COMM_WORLD,taskid,ierror)
   call MPI_COMM_SIZE(MPI_COMM_WORLD,numproc,ierror)
@@ -31,7 +34,9 @@ PROGRAM SEQUENTIAL_MD
 !Sharing the initial state for all the workers
     call MPI_BCAST(r, n_particles*3, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
     call MPI_BCAST(v, n_particles*3, MPI_DOUBLE_PRECISION, 0, MPI_COMM_WORLD, IERROR)
-
+!##########################
+! MELTING AND THERMALIZATION
+!#########################
     DO nstep=1,n_melting
      call velo_verlet(r,v,F)
      call andersen(v,T_therm_prov)
@@ -46,18 +51,25 @@ PROGRAM SEQUENTIAL_MD
     open(46,file='temp_pres_real.dat')
     open(53,file='distrib_funct.dat')
     open(54,file='positions.xyz')
- 
   end if
 
-!Loop over time
+!##########################
+! VERLET EVOLUTION
+!#########################
   DO nstep=1,n_verlet
     t=t_a+nstep*h
+    !Verlet step
     call VELO_VERLET(r,v,F)
     if(is_thermostat.eqv..true.)THEN
        call andersen(v,T_therm)
     end if
+    !Computing the observables
     CALL SAMPLES()
   end do
+!##########################
+! FINAL COMPUTATIONS
+!#########################
+    !Final form of the gdr
     CALL gdr()
   endtime = MPI_WTIME()
   IF (taskid==0) then

@@ -1,12 +1,26 @@
 # Molecular Dynamics Symulations
 
-Computational progect to develop sequenctial and paralelized programs to symulate molecular dynamics. 
+* Motivation
 
-## Fisrst steps 🚀
+Master's computational progect to learn the basic knowledege of parallel computing. We develop many programs where we basically change the way double loops are made. Also, we check the optimization chacteristics for each one. The execution was made at the BSC Mare Nostrum where large number of CPUs wherw used.
+* The system
+
+Van der Waals gas with pair Lenard-Johnes interactions. By setting the number of particles and density, the program fills a cubic volume with an FCC structure and periodic boundary conditions.
+* Molecular dynamics
+
+We use the Velocity Verlet algorithm to integrate the equations and optionaly set and Andersen thermostat.
+
+## First steps 💡
 Information to install and execute the programs
 
 
 ### Pre-requisites 📋
+
+Working environment:
+
+```
+Linux Shell and Bash
+```
 
 Sequential compilers:
 
@@ -36,7 +50,7 @@ Makefile:  configure the compiler anf flags variables (mpifort by default)
 "run_sub.sh" (2): Configure the submit options ( BSC by default)
 ```
 
-## Execution ⚙️
+## Execution 🚀
 
 Sequential program
 ```
@@ -53,82 +67,110 @@ Paralel program (compututing cluster)
 (3) Collect the results in the OUTPUT folder
     The results folder name is the date-time whem the task was executed
 ```
-### Program-check 🔩
+### Program-check 🔎
 
 In the OUTPUT foler is provided a run_check subfolder with input configuration parameters and graphs. 
 Put the same paremeters in the INPUT files, run the program and compare the graphs. 
 They should be similar except for a random factor
 
-### About the different programs ⌨️
+### Main theoretical characterisitics ⌨️
 
-Brief description of the main characteristics
 
-MDS
 ```
-blabla
-```
-MDP1
-```
-blabla
-```
-MDP2
-```
-blabla
-```
-MDP3
-```
-blabla
-```
-MDP4
-```
-blabla
+- Inital FCC structure in a cubic volume.
+- Uniform random initial velocities.
+- Melting and equilibration at a custmizable temperature.
+- Velocity Verlet algorithm to integrate the equations.
+- Andersen Thermostat to controll the bath temperature.
+- Pair interaction with Lenard-Johnes potential.
+- Periodic boundary conditions.
+- Observables results in real and reduced units.
 ```
 
-## Despliegue 📦
+## Technologies 🛠️
 
-_Agrega notas adicionales sobre como hacer deploy_
+```
+- Fortran
+- Open MPI subrouines
+- Random numbers: CALL RANDOM_NUMBER(x) (no explicit seed)
+- GNU Plot
+- Bash shell scripts
+- Computing Cluster
+```
 
-## Construido con 🛠️
+## Version 📌
 
-_Menciona las herramientas que utilizaste para crear tu proyecto_
+Outcome : 21 / 04 / 2020 (version 1.0)
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - El framework web usado
-* [Maven](https://maven.apache.org/) - Manejador de dependencias
-* [ROME](https://rometools.github.io/rome/) - Usado para generar RSS
+Last moifyed:  NONE (version --)
 
-## Contribuyendo 🖇️
+## Authors ✒️
 
-Por favor lee el [CONTRIBUTING.md](https://gist.github.com/villanuevand/xxxxxx) para detalles de nuestro código de conducta, y el proceso para enviarnos pull requests.
+* **Alexandre Sureda**
+* **Elena Ricart**
+* **Laia Navarro**
+* **Oriol Cabanas**
+* **Silvia Àlvarez**
 
-## Wiki 📖
 
-Puedes encontrar mucho más de cómo utilizar este proyecto en nuestra [Wiki](https://github.com/tu/proyecto/wiki)
-
-## Versionado 📌
-
-Usamos [SemVer](http://semver.org/) para el versionado. Para todas las versiones disponibles, mira los [tags en este repositorio](https://github.com/tu/proyecto/tags).
-
-## Autores ✒️
-
-_Menciona a todos aquellos que ayudaron a levantar el proyecto desde sus inicios_
-
-* **Andrés Villanueva** - *Trabajo Inicial* - [villanuevand](https://github.com/villanuevand)
-* **Fulanito Detal** - *Documentación* - [fulanitodetal](#fulanito-de-tal)
-
-También puedes mirar la lista de todos los [contribuyentes](https://github.com/your/project/contributors) quíenes han participado en este proyecto. 
-
-## Licencia 📄
-
-Este proyecto está bajo la Licencia (Tu Licencia) - mira el archivo [LICENSE.md](LICENSE.md) para detalles
-
-## Expresiones de Gratitud 🎁
+## Acknowledgments 🎁
 
 * Comenta a otros sobre este proyecto 📢
 * Invita una cerveza 🍺 o un café ☕ a alguien del equipo. 
 * Da las gracias públicamente 🤓.
 * etc.
 
+# Appendix
+* Input parameters
+* Speedup and runnung time recomendations
+## A1: Input parameters
+parametters.dat
+```
+particles        # Number of particles (x^3 *4 ; with x natural and positive)
+density          # Density (reduced units)
+time             # Symulation time (reduced units)
+h                # Time step (reduced units)
+sigma            # Sigma of the gas (Angstroms)
+epsilon          # Epsilon of the gas (kJ/mol)
+mass             # Mass (g/mol)
+(boolean)        # To add a thermostat
+temperature      # If true, temperature of the thermostat (reduced units)
+dx               # Precision for the radial distribution function (reduced units)
+```
+config.dat
+```
+temperature      # Temperature of the initial melting (reduced units)
+iterations       # Melting Velo Verlet Intagration steps
+(boolean)        # Print thermodynamic magnitudes
+iterations       # Delta iterations to measure thermodynamic magnitudes
+(boolean)        # Compute the radial distribution function
+iterations       # Delta iterations to compute the Rad. Dist. Func
+(boolean)        # Time-positions of the particles (.xyz file)
+iterations       # Delta iterations to save the positions
+```
+constants.dat
+```
+0.008314462      # Boltzman constant in kJ/mol.K
+6.022d23         # Avogadro number
+```
+## A2: Speedup and runnung time recomendations
+MDP-Double Work
+```
+- Same numer of particles for each processator
+- For each particle is computed the interactions with the others. 
+     No symetric reduction is maid to comupute the half of the matrix.
+- Every processator have the same work
+```
+MDP- Pair
+```
+- Same number of interactions for each patricle
+- It is computed the direct and the symetric term. We loop over half of the matrix
+- Every processator have the same work
+```
+MDP- Symetric Matrix
+```
+- Same numer of particles for each processator
+- It is computed the direct and the symetric term. We loop over half of the matrix
+- Different distribution of the work
+```
 
-
----
-⌨️ con ❤️ por [Villanuevand](https://github.com/Villanuevand) 😊
