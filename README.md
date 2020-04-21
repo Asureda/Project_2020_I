@@ -72,7 +72,7 @@ Sequential program
 ```
 Parallel program (compututing cluster)
 ```
-(1) Configure the symulation parameters (INPUT folder)
+(1) Configure the simulation parameters (INPUT folder)
 (2) Execute the "run_sub.sh" script.
 (3) Collect results in the OUTPUT folder.
     The results folder name is the date-time when the task was executed.
