@@ -5,7 +5,7 @@
 ##   RUNNING TASKS
 ##   $ bjobs
 #!/bin/bash
-#BSUB -n 200
+#BSUB -n 1
 #BSUB -J symm2
 #BSUB -o %symm2.out
 #BSUB -e %symm2.err
