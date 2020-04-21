@@ -5,13 +5,13 @@
 ##   RUNNING TASKS
 ##   $ bjobs
 #!/bin/bash
-#BSUB -n 200
-#BSUB -J symm2
-#BSUB -o %symm2.out
-#BSUB -e %symm2.err
+#BSUB -n 1
+#BSUB -J sequential
+#BSUB -o %sequential.out
+#BSUB -e %sequential.err
 #BSUB -q training
 #BSUB -W 210
-##BSUB -R "span[ptile=5]"
+
 module purge
 module load intel/16.0.3
 
