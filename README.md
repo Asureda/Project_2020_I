@@ -2,7 +2,7 @@
 
 * Motivation
 
-Master's computational project to learn the basic knowledege of parallel computing applied in molecular dynamics. We develop programs where the tasks of each loop are distributed in different processors. Also, we check the optimization chacteristics for each one. The execution was made at the BSC Mare Nostrum where large number of CPUs where used and we work almost with 400 processors. Another objective of this project is analysing the speed-up and comparing time execution with different number of particles in sequential and parallel program.
+Master's computational project to learn the basic knowledege of parallel computing applied to molecular dynamics. We develop programs where the tasks of each loop are distributed in different processors. Also, we check the optimization characteristics for each one. The execution was made at the BSC Mare Nostrum where large number of CPUs where used and we worked almost with 400 processors. Another objective of this project is analysing the speed-up and comparing time execution with different number of particles in sequential and parallel program.
 
 * The system
 
@@ -14,7 +14,6 @@ We use the Velocity Verlet algorithm to integrate the equations and set if the u
 
 ## First steps 💡
 Information to install and execute the programs
-
 
 ### Pre-requisites 📋
 
@@ -38,20 +37,20 @@ intel openmpi (Default)
 
 ### Instalation 🔧
 
-The programs are ready-to-use. The user have to download the repository in a local computer folder or computing cluster, configure the compiller and flags options in the Makefile
+The programs are ready-to-use. The user have to download the repository in a local computer folder or computing cluster, configure the compiler and flags options in the Makefile
 
 Sequential program
 ```
-Makefile:  configure compiller and flags variables (ifort by default)
+Makefile:  configure compiler and flags variables (ifort by default)
 
 ```
 Paralel program (compututing cluster)
 ```
-Makefile:  configure the compiler anf flags variables (mpifort by default)
+Makefile:  configure the compiler and flags variables (mpifort by default)
 "run_sub.sh" (1): Check the execution order ( mpirun by default)
 "run_sub.sh" (2): Configure the submit options ( BSC by default)
 "run.sh" (1): Check Makefile flags for ifort or gfortran.
-"run.sh" (2): Configure "run.sh" number of cores.
+"run.sh" (2): Configure "run.sh" number of processors.
 
 ```
 
@@ -59,18 +58,18 @@ Makefile:  configure the compiler anf flags variables (mpifort by default)
 
 Sequential program
 ```
-(1) Configure the symulation parameters (INPUT folder)
+(1) Configure the simulation parameters (INPUT folder)
 (2) Execute the "run.sh" script.
-(3) Collect the results in the OUTPUT folder
-    The results folder name is the date-time whem the task was executed
+(3) Collect results in the OUTPUT folder.
+    The results folder name is the date-time when the task was submitted.
 
 ```
 Paralel program (compututing cluster)
 ```
 (1) Configure the symulation parameters (INPUT folder)
 (2) Execute the "run_sub.sh" script.
-(3) Collect the results in the OUTPUT folder
-    The results folder name is the date-time whem the task was executed
+(3) Collect results in the OUTPUT folder.
+    The results folder name is the date-time when the task was executed.
 ```
 ### Program-check 🔎
 
