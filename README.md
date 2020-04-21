@@ -74,10 +74,10 @@ Paralel program (compututing cluster)
 ### Program-check 🔎
 
 In the OUTPUT foler is provided a run_check subfolder with input configuration parameters and graphs. 
-Put the same paremeters in the INPUT files, run the program and compare the graphs. 
+Put the same parameters in the INPUT files, run the program and compare the graphs. 
 They should be similar except for a random factor
 
-### Main theoretical characterisitics ⌨️
+### Main theoretical characteristics ⌨️
 
 
 ```
@@ -85,10 +85,10 @@ They should be similar except for a random factor
 - Uniform random initial velocities.
 - Melting and equilibration at a customizable temperature.
 - Velocity Verlet algorithm to integrate the equations.
-- Andersen Thermostat to controll the bath temperature.
-- Pair interaction with Lenard-Johnes potential.
+- Andersen Thermostat to control the bath temperature.
+- Pair interactions with Lennard-Johnes potential.
 - Periodic boundary conditions.
-- Observables results in real and reduced units.
+- Thermodinamic results in real and reduced units.
 ```
 
 ## Technologies 🛠️
