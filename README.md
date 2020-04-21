@@ -162,21 +162,20 @@ constants.dat
 ## A2: Speed up and running time recomendations
 MDP-Double Work
 ```
-- Same number of particles for each processor.
-- For each particle is computed the interactions with the others. 
-     No symetric reduction is maid to compute the half of the matrix.
+- Same number of interactions for each processor. 
+- No symmetric reduction is made to compute the half of the matrix.
 - Every processor has the same work.
 ```
 MDP- Pair
 ```
-- Same number of interactions for each patricle.
-- It is computed the direct and the symetric term. We loop over half of the matrix.
+- Same number of interactions for each particle.
+- List of pairs distributed for each processor.
 - Every processor has the same work.
 ```
-MDP- Symetric Matrix
+MDP- Symmetric Matrix
 ```
-- Same number of particles for each processor.
-- It is computed the direct and the symetric term. We loop over half of the matrix.
+- Different number of interactions for each processor.
+- Use of the symmetry force to parallelize.
 - Different distribution of work between processors.
 ```
 
