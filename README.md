@@ -2,12 +2,12 @@
 
 * Motivation
 
-Master's computational project to learn the basic knowledege of parallel computing applied to molecular dynamics. 
+Master's computational project to learn the basic knowledge of parallel computing applied to molecular dynamics. 
 The main objectives of this project are:
 - Develop a molecular dynamics program.
 - Once the sequential program is done, develop programs where the tasks of each loop are distributed in different processors and check the optimization characteristics for each one. 
 - Analyze the speed-up and compare time execution with different number of particles in parallel program.
-The execution has been perdormed at the BSC Mare Nostrum where large number of CPUs where used; we worked almost with 400 processors.
+The execution has been performed at the BSC Mare Nostrum where large number of CPUs where used; we worked almost with 400 processors.
 
 * The system
 
@@ -50,7 +50,7 @@ Sequential program
 Makefile:  configure compiler and flags variables (ifort by default)
 
 ```
-Parallel program (compututing cluster)
+Parallel program (computing cluster)
 ```
 Makefile:  configure the compiler and flags variables (mpifort by default)
 "run_sub.sh" (1): Check the execution order ( mpirun by default)
@@ -70,7 +70,7 @@ Sequential program
     The results folder name is the date-time when the task was submitted.
 
 ```
-Parallel program (compututing cluster)
+Parallel program (computing cluster)
 ```
 (1) Configure the simulation parameters (INPUT folder)
 (2) Execute the "run_sub.sh" script.
@@ -79,7 +79,7 @@ Parallel program (compututing cluster)
 ```
 ### Program-check 🔎
 
-In the OUTPUT foler is provided a run_check subfolder with input configuration parameters and graphs. 
+In the OUTPUT folder is provided a run_check subfolder with input configuration parameters and graphs. 
 Put the same parameters in the INPUT files, run the program and compare the graphs; they should be similar except for a random factor.
 
 ### Main theoretical characteristics ⌨️
@@ -92,7 +92,7 @@ Put the same parameters in the INPUT files, run the program and compare the grap
 - Andersen Thermostat to control the bath temperature.
 - Pair interactions with Lennard-Johnes potential.
 - Periodic boundary conditions.
-- Thermodinamic results in real and reduced units.
+- Thermodynamic results in real and reduced units.
 ```
 
 ## Technologies 🛠️
@@ -110,7 +110,7 @@ Put the same parameters in the INPUT files, run the program and compare the grap
 
 Outcome : 21 / 04 / 2020 (version 1.0)
 
-Last moifyed:  NONE (version --)
+Last moified:  NONE (version --)
 
 ## Authors ✒️
 
@@ -128,7 +128,7 @@ To Barcelona Supercomputing Center-Centro Nacional de Supercomputación (BSC-CNS
 
 # Appendix
 * Input parameters
-* Speed up and runnung time recomendations
+* Speed up and running time recommendations
 ## A1: Input parameters
 parameters.dat
 ```
@@ -159,7 +159,7 @@ constants.dat
 0.008314462      # Boltzman constant in kJ/molK
 6.022d23         # Avogadro number
 ```
-## A2: Speed up and running time recomendations
+## A2: Speed up and running time recommendations
 MDP-Double Work
 ```
 - Same number of interactions for each processor. 
