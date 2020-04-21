@@ -2,13 +2,15 @@
 
 * Motivation
 
-Master's computational progect to learn the basic knowledege of parallel computing. We develop many programs where we basically change the way double loops are made. Also, we check the optimization chacteristics for each one. The execution was made at the BSC Mare Nostrum where large number of CPUs where used.
+Master's computational project to learn the basic knowledege of parallel computing applied in molecular dynamics. We develop programs where the tasks of each loop are distributed in different processors. Also, we check the optimization chacteristics for each one. The execution was made at the BSC Mare Nostrum where large number of CPUs where used and we work almost with 400 processors. Another objective of this project is analysing the speed-up and comparing time execution with different number of particles in sequential and parallel program.
+
 * The system
 
-Van der Waals gas with pair Lenard-Johnes interactions. By setting the number of particles and density, the program fills a cubic volume with an FCC structure and periodic boundary conditions.
+We work with a Van der Waals gas, concretly helium gas, with pair Lenard-Johnes interactions. We consider a system of N particles in a canonical ensemble (NVT ensemble). It lets us change the number of particles, density and diferent steps used during the simulation. Firstly, the system has a FCC structure and it is under periodic bounday conditions, but after a melting process, it becomes a fluid. In this point, the system starts to be studied. The kinetics and thermodynamic parameters are analysed.
+
 * Molecular dynamics
 
-We use the Velocity Verlet algorithm to integrate the equations and optionaly set and Andersen thermostat.
+We use the Velocity Verlet algorithm to integrate the equations and set if the user neeeds, switch on the Andersen thermostat. During the simulation with this algorithms, we recalculate the positions and the velocities of the system so many times. If we are working with a heat bath, the expected results are the constant temperature during the simulation as same as the total energy, while the kinetic and potential energy are going to fluctuate.
 
 ## First steps 💡
 Information to install and execute the programs
