@@ -27,14 +27,6 @@ module parallel_routines
                 desplac(i)=index_matrix(i-1,2)
                 end if
                 num_send(i)=index_matrix(i,2)-index_matrix(i,1)+1
-            end do
-        if(taskid==0) then
-          DO i =1,numproc
-            print*,index_matrix(i,:)
-          END DO
-          print*,desplac(:)
-          print*,num_send(:)
-        end if
-       
+            end do      
     END SUBROUTINE
 END module
