@@ -1,8 +1,8 @@
-# Molecular Dynamics Symulations
+# Molecular Dynamics Simulations
 
 * Motivation
 
-Master's computational progect to learn the basic knowledege of parallel computing. We develop many programs where we basically change the way double loops are made. Also, we check the optimization chacteristics for each one. The execution was made at the BSC Mare Nostrum where large number of CPUs wherw used.
+Master's computational progect to learn the basic knowledege of parallel computing. We develop many programs where we basically change the way double loops are made. Also, we check the optimization chacteristics for each one. The execution was made at the BSC Mare Nostrum where large number of CPUs where used.
 * The system
 
 Van der Waals gas with pair Lenard-Johnes interactions. By setting the number of particles and density, the program fills a cubic volume with an FCC structure and periodic boundary conditions.
@@ -79,7 +79,7 @@ They should be similar except for a random factor
 ```
 - Inital FCC structure in a cubic volume.
 - Uniform random initial velocities.
-- Melting and equilibration at a custmizable temperature.
+- Melting and equilibration at a customizable temperature.
 - Velocity Verlet algorithm to integrate the equations.
 - Andersen Thermostat to controll the bath temperature.
 - Pair interaction with Lenard-Johnes potential.
