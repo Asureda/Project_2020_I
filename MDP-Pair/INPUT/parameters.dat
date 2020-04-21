@@ -1,4 +1,4 @@
-50         # Number of particles (x^3 *4 ; with x natural and positive)
+500          # Number of particles (x^3 *4 ; with x natural and positive)
 0.8          # Density (reduced units)
 20           # Symulation time (reduced units)
 0.0001       # Time step (reduced units)
