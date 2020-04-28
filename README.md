@@ -168,7 +168,7 @@ MDP-Double Work
 ```
 MDP- Pair
 ```
-- Same number of interactions for each particle.
+- Same number of interactions for each processor.
 - List of pairs distributed for each processor.
 - Every processor has the same work.
 ```
